@@ -32,6 +32,18 @@ extension MapClient {
     }
     
     struct UdacityResponseKeys {
+        
+        let objectID: String
+        let latitude: String
+        let mapString: String
+        let uniqueKey: String
+        let lastName: String
+        let firstName: String
+        let longitude: String
+        let mediaURL: String
+        let createdAt: String
+        let updatedAt: String
+        
         static let objectID = "objectId"
         static let latitude = "latitude"
         static let mapString = "mapString"
