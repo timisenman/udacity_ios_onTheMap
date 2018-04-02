@@ -15,7 +15,7 @@ class CellTableViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        print("hello, map")
+        print("hello, cells")
     }
     
     func downloadUserData() {

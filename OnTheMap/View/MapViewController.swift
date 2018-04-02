@@ -14,7 +14,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapViewToolBar: UIToolbar!
     @IBOutlet weak var mapView: MKMapView!
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -22,25 +21,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-//        let downloadQueue = DispatchQueue(label: "download", attributes: [])
-//
-//        // call dispatch async to send a closure to the downloads queue
-//        downloadQueue.async { () -> Void in
-//
-//            // display it
-//            DispatchQueue.main.async(execute: { () -> Void in
-//
-//
-//            })
-//        }
         let location = CLLocationCoordinate2DMake(37.786576, -122.394411)
-        
         let mapSpan = MKCoordinateSpanMake(0.01, 0.01)
-        
         let mapRegion = MKCoordinateRegionMake(location, mapSpan)
-        
         self.mapView.setRegion(mapRegion, animated: true)
     }
-
 
 }

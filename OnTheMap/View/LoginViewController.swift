@@ -13,6 +13,13 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var accountTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print("View is up.")
+        
+        // Do any additional setup after loading the view.
+    }
+    
     @IBAction func submitLoginButton(_ sender: Any) {
         print("Credentials submitted")
         let url = URL(string:"https://www.udacity.com/api/session")
@@ -35,7 +42,7 @@ class LoginViewController: UIViewController {
                 print("no data")
                 return
             }
-            print("This is your data, dipshit: \n\(data)")
+            print("This is your data: \n\(data)")
             
             let range = Range(5..<data.count)
             let newData = data.subdata(in: range)
@@ -78,28 +85,11 @@ class LoginViewController: UIViewController {
                         self.present(mapVC, animated: true, completion: nil)
                     })
                 }
-                
-                
-                
             } else {
-                print("\nWho da fuck dis bitch")
+                print("\nUser credentials not recognized.")
             }
-            
         }
-        
         task.resume()
         print("\nTask complete.")
     }
-    
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        print("View is up.")
-
-        // Do any additional setup after loading the view.
-    }
-    
-    
-
-
 }
