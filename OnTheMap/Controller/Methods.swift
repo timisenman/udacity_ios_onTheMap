@@ -8,14 +8,8 @@
 
 import Foundation
 
-func taskForGET () {
-    
-}
+func taskForGET () {}
 
-func taskForPOST () {
-    
-}
+func taskForPOST () {}
 
-func takeForDELETE () {
-    
-}
+func takeForDELETE () {}

@@ -44,7 +44,6 @@ class CellTableViewController: UIViewController {
                 
                 // display it
                 DispatchQueue.main.async(execute: { () -> Void in
-                    self.dataTextView.text = String(describing: newData)
                 })
             }
             
