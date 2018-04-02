@@ -43,8 +43,9 @@ class CellTableViewController: UIViewController {
                 let newData = String(data: data!, encoding: .utf8)!
                 
                 // display it
-                DispatchQueue.main.async(execute: { () -> Void in
-                })
+//                DispatchQueue.main.async(execute: { () -> Void in
+//                })
+                print(newData)
             }
             
         }

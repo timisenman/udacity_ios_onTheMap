@@ -22,23 +22,24 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         
-        let downloadQueue = DispatchQueue(label: "download", attributes: [])
+//        let downloadQueue = DispatchQueue(label: "download", attributes: [])
+//
+//        // call dispatch async to send a closure to the downloads queue
+//        downloadQueue.async { () -> Void in
+//
+//            // display it
+//            DispatchQueue.main.async(execute: { () -> Void in
+//
+//
+//            })
+//        }
+        let location = CLLocationCoordinate2DMake(37.786576, -122.394411)
         
-        // call dispatch async to send a closure to the downloads queue
-        downloadQueue.async { () -> Void in
-            
-            // display it
-            DispatchQueue.main.async(execute: { () -> Void in
-                let location = CLLocationCoordinate2DMake(45.0, 100.0)
-                
-                let mapSpan = MKCoordinateSpanMake(0.01, 0.01)
-                
-                let mapRegion = MKCoordinateRegionMake(location, mapSpan)
-                
-                self.mapView.setRegion(mapRegion, animated: true)
-                
-            })
-        }
+        let mapSpan = MKCoordinateSpanMake(0.01, 0.01)
+        
+        let mapRegion = MKCoordinateRegionMake(location, mapSpan)
+        
+        self.mapView.setRegion(mapRegion, animated: true)
     }
 
 
