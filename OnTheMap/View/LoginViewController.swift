@@ -66,9 +66,20 @@ class LoginViewController: UIViewController {
             if isRegistered == 1 {
                 print("\nThis user is registered.")
                 
-                let mapVC: MapViewController
-                mapVC = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
-                self.present(mapVC, animated: true, completion: nil)
+                let downloadQueue = DispatchQueue(label: "download", attributes: [])
+                
+                // call dispatch async to send a closure to the downloads queue
+                downloadQueue.async { () -> Void in
+                    
+                    // display it
+                    DispatchQueue.main.async(execute: { () -> Void in
+                        let mapVC: MapViewController
+                        mapVC = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
+                        self.present(mapVC, animated: true, completion: nil)
+                    })
+                }
+                
+                
                 
             } else {
                 print("\nWho da fuck dis bitch")
