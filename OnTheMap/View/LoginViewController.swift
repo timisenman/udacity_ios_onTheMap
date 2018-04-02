@@ -80,9 +80,9 @@ class LoginViewController: UIViewController {
                     
                     // display it
                     DispatchQueue.main.async(execute: { () -> Void in
-                        let mapVC: MapViewController
-                        mapVC = self.storyboard?.instantiateViewController(withIdentifier: "MapViewController") as! MapViewController
-                        self.present(mapVC, animated: true, completion: nil)
+                        let tabVC: UITabBarController
+                        tabVC = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+                        self.present(tabVC, animated: true, completion: nil)
                     })
                 }
             } else {
