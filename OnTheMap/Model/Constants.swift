@@ -41,8 +41,6 @@ struct ParseConstants {
     static let UdacityApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
     static let UdacityAppIDHeader = "X-Parse-Application-Id"
     static let UdacityAPIKeyHeader = "X-Parse-REST-API-Key"
-    static let FacebookHost = "api.facebook.com"
-    static let FacebookAppID = "365362206864879"
     
 }
 

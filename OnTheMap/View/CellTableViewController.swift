@@ -9,13 +9,20 @@
 import UIKit
 
 class CellTableViewController: UIViewController {
+    
+    
+    @IBOutlet weak var logoutButton: UIBarButtonItem!
+    @IBOutlet weak var addLocationButton: UIBarButtonItem!
+    @IBOutlet weak var refreshDataButton: UIBarButtonItem!
 
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
         print("hello, cells")
+        downloadUserData()
     }
     
     func downloadUserData() {

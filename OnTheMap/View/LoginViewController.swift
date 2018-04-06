@@ -62,33 +62,27 @@ class LoginViewController: UIViewController {
                 return
             }
             print(accountData)
-
+            
             guard let isRegistered = accountData["registered"] as? Int else {
                 print("Account not registered")
                 return
             }
             
             print(isRegistered)
-
+            
             if isRegistered == 1 {
                 print("\nThis user is registered.")
                 
-                let downloadQueue = DispatchQueue(label: "download", attributes: [])
-                
-                // call dispatch async to send a closure to the downloads queue
-                downloadQueue.async { () -> Void in
-                    
-                    // display it
-                    DispatchQueue.main.async(execute: { () -> Void in
-                        let tabVC: UITabBarController
-                        tabVC = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
-                        self.present(tabVC, animated: true, completion: nil)
-                    })
+                performUIUpdatesOnMain {
+                    let tabVC: UITabBarController
+                    tabVC = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
+                    self.present(tabVC, animated: true, completion: nil)
                 }
             } else {
                 print("\nUser credentials not recognized.")
             }
         }
+        
         task.resume()
         print("\nTask complete.")
     }

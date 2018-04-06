@@ -11,8 +11,12 @@ import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate {
 
-    @IBOutlet weak var mapViewToolBar: UIToolbar!
+    @IBOutlet weak var mapViewToolBar: UINavigationItem!
     @IBOutlet weak var mapView: MKMapView!
+    @IBOutlet weak var addLocationButton: UIBarButtonItem!
+    @IBOutlet weak var logoutButton: UIBarButtonItem!
+    @IBOutlet weak var refreshDataButton: UIBarButtonItem!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
