@@ -37,23 +37,23 @@ class CellTableViewController: UIViewController {
             if error != nil { // Handle error…
                 return
             }
-            print(String(data: data!, encoding: .utf8)!)
-            
-            
-            // create a queue from scratch
-            let downloadQueue = DispatchQueue(label: "download", attributes: [])
-            
-            // call dispatch async to send a closure to the downloads queue
-            downloadQueue.async { () -> Void in
-                
-                // download Data
-                let newData = String(data: data!, encoding: .utf8)!
-                
-                // display it
-//                DispatchQueue.main.async(execute: { () -> Void in
-//                })
-                print(newData)
-            }
+//            print(String(data: data!, encoding: .utf8)!)
+//            
+//            
+//            // create a queue from scratch
+//            let downloadQueue = DispatchQueue(label: "download", attributes: [])
+//            
+//            // call dispatch async to send a closure to the downloads queue
+//            downloadQueue.async { () -> Void in
+//                
+//                // download Data
+//                let newData = String(data: data!, encoding: .utf8)!
+//                
+//                // display it
+////                DispatchQueue.main.async(execute: { () -> Void in
+////                })
+//                print(newData)
+//            }
             
         }
         task.resume()
