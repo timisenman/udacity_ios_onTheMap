@@ -65,4 +65,8 @@ struct Constants {
         static let updatedAtKey = "updatedAt"
         
     }
+    
+    struct Segues {
+        static let confirmLocation = "ConfirmLocationSegue"
+    }
 }

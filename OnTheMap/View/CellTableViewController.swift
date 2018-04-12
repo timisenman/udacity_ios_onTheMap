@@ -13,6 +13,7 @@ class CellTableViewController: UITableViewController {
     @IBOutlet weak var logoutButton: UIBarButtonItem!
     @IBOutlet weak var addLocationButton: UIBarButtonItem!
     
+    
     var students: [Student] = [Student]()
     
     override func viewDidLoad() {
@@ -57,7 +58,7 @@ class CellTableViewController: UITableViewController {
     
     
     func downloadUserData() {
-        var request = URLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=10")!)
+        var request = URLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=25")!)
         request.httpMethod = "GET"
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
@@ -68,14 +69,11 @@ class CellTableViewController: UITableViewController {
             if error != nil { // Handle error…
                 return
             }
-//            print("\n\n\(String(data:data!, encoding: .utf8)!)\n\n")
             
             var results: [String:AnyObject]!
             do {
                 results = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String:AnyObject]
-            } /*catch {
-                print("Shit broke at serialization.")
-            }*/
+            }
             
             guard let studentData = results["results"] as? [[String:AnyObject]] else {
                 print("Could not convert data at Student Data")
@@ -91,54 +89,16 @@ class CellTableViewController: UITableViewController {
         task.resume()
     }
     
-//    @IBAction func testAction(_ sender: Any){
-//        var request = URLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=10")!)
-//        request.httpMethod = "GET"
-//        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-//        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-//        
-//        let session = URLSession.shared
-//        let task = session.dataTask(with: request) { (data, response, error) in
-//            guard (error == nil) else {
-//                print(error!)
-//                return
-//            }
-//            
-//            guard let data = data else {
-//                print("There was no data")
-//                return
-//            }
-//            
-//            var parsedData: [String:AnyObject]!
-//            do {
-//                parsedData = try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as! [String : AnyObject]
-//            }
-//            
-//            guard let results = parsedData["results"] as? [[String:AnyObject]] else {
-//                print("error")
-//                return
-//            }
-//            
-//            for item in results {
-//                print("\(String(describing: item["firstName"]!)) \(String(describing: item["lastName"]!))")
-//            }
-////            print(results)
-//            
-//        }
-//        task.resume()
-//        
-//    }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "studentsCells"
         let student = students[(indexPath as NSIndexPath).row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell?
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! CustomCellViewControllerTableViewCell
         
-        cell?.textLabel?.text = student.firstName + " " + student.lastName
-        cell?.detailTextLabel?.text = student.mediaURL
+        cell.studentName.text = student.firstName + " " + student.lastName
+        cell.studentSite.text = student.mediaURL
         
-        
-        return cell!
+        return cell
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -146,7 +106,14 @@ class CellTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
+        let student = students[(indexPath as NSIndexPath).row]
+        UIApplication.shared.open(URL(string: "\(student.mediaURL)")!, options: [:]) { (success) in
+            if success {
+                print("URL opened successfully")
+            } else {
+                print("URL not opened.")
+            }
+        }
     }
     
     

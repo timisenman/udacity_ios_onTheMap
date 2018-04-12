@@ -14,6 +14,10 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var confirmLocationMap: MKMapView!
     @IBOutlet weak var confirmLocationButton: UIButton!
     
+    var student: Student?
+    var newLocation: String?
+    var newWebsite: String?
+    
     //Show geocoded location
     //POST/PUT Request
     //Dismiss view
@@ -21,6 +25,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        
     }
 
     
@@ -30,7 +35,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = "{\"uniqueKey\": \"1234\", \"firstName\": \"Tim\", \"lastName\": \"Isenman\",\"mapString\": \"San Francisco, CA\", \"mediaURL\": \"https://apple.com/\",\"latitude\": 37.745192, \"longitude\": -122.439662}".data(using: .utf8)
+        request.httpBody = "{\"uniqueKey\": \"1234\", \"firstName\": \"Tim\", \"lastName\": \"Isenman\",\"mapString\": \"\(newLocation!)\", \"mediaURL\": \"\(newWebsite!)\",\"latitude\": 37.745192, \"longitude\": -122.439662}".data(using: .utf8)
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
             if error != nil { // Handle error…
@@ -40,7 +45,10 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
             
             if (error == nil) {
                 print("No error. Dismissing Confirmation View.")
-                self.dismiss(animated: true, completion: nil)
+                performUIUpdatesOnMain {
+                    self.dismiss(animated: true, completion: nil)
+//                    self.navigationController?.popViewController(animated: true)
+                }
             } else {
                 print(error!)
             }

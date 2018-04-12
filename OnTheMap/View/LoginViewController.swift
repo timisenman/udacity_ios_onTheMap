@@ -53,8 +53,6 @@ class LoginViewController: UIViewController {
             
             do {
                 json = try? JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String:AnyObject]
-            } catch {
-                print(error)
             }
             
             guard let accountData = json["account"] as? [String:AnyObject] else {
