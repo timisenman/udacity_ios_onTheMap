@@ -25,7 +25,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
 
     
     @IBAction func confirmLocationAction(_ sender: Any) {
-        
         var request = URLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
         request.httpMethod = "POST"
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")

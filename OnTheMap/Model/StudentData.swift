@@ -1,5 +1,5 @@
 //
-//  StudentData.swift
+//  Constants.StudentResponseKeys.ata.swift
 //  OnTheMap
 //
 //  Created by Timothy Isenman on 3/29/18.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct StudentInfo {
+struct Student {
     let objectId: String
     let uniqueKey: String
     let firstName: String
@@ -19,19 +19,30 @@ struct StudentInfo {
     let longitude: Double
     let createdAt: String
     let updatedAt: String
-
-    init?(dictionary: [String:Any]) {
-        self.firstName = dictionary["firstName"] as? String ?? ""
-        self.lastName = dictionary["lastName"] as? String ?? ""
-        self.uniqueKey = dictionary["uniqueKey"] as? String ?? ""
-        self.objectId = dictionary["objectId"] as? String ?? ""
-        self.mapString = dictionary["mapString"] as? String ?? ""
-        self.mediaURL = dictionary["mediaURL"] as? String ?? ""
-        self.latitude = dictionary["latitude"] as? Double ?? 0.0
-        self.longitude = dictionary["longitude"] as? Double ?? 0.0
-        self.createdAt = dictionary["createdAt"] as? String ?? ""
-        self.updatedAt = dictionary["updatedAt"] as? String ?? ""
-
+    
+    init?(dictionary: [String:AnyObject]) {
+        self.objectId = dictionary[Constants.StudentResponseKeys.objectKey] as? String ?? ""
+        self.uniqueKey = dictionary[Constants.StudentResponseKeys.uniqueKeyKey] as? String ?? ""
+        self.firstName = dictionary[Constants.StudentResponseKeys.firstNameKey] as? String ?? ""
+        self.lastName = dictionary[Constants.StudentResponseKeys.lastNameKey] as? String ?? ""
+        self.mapString = dictionary[Constants.StudentResponseKeys.mapStringKey] as? String ?? ""
+        self.mediaURL = dictionary[Constants.StudentResponseKeys.mediaURLKey] as? String ?? ""
+        self.latitude = dictionary[Constants.StudentResponseKeys.latitudeKey] as? Double ?? 0.0
+        self.longitude = dictionary[Constants.StudentResponseKeys.longitudeKey] as? Double ?? 0.0
+        self.createdAt = dictionary[Constants.StudentResponseKeys.createAtKey] as? String ?? ""
+        self.updatedAt = dictionary[Constants.StudentResponseKeys.updatedAtKey] as? String ?? ""
     }
+    
+    static func studentsFromRequest(_ results: [[String:AnyObject]]) -> [Student] {
+        
+        var studentsArray = [Student]()
+        
+        for object in results {
+            studentsArray.append(Student(dictionary: object)!)
+        }
+        return studentsArray
+    }
+    
 }
+
 

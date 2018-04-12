@@ -17,8 +17,8 @@ class SetLocationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.locationTextField.text = "San Francisco, CA"
-        self.websiteTextField.text = "https://apple.com/"
+        self.locationTextField.text = "Yo' City"
+        self.websiteTextField.text = "https://timisenman.me/"
 
         // Do any additional setup after loading the view.
     }

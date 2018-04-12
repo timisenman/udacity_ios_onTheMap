@@ -74,6 +74,8 @@
 		8D4F3C402064614D003E5B14 /* OnTheMap */ = {
 			isa = PBXGroup;
 			children = (
+				8D4F3C412064614D003E5B14 /* AppDelegate.swift */,
+				8D6D44EA20745AB800D6A196 /* DispatchQueue.swift */,
 				8D4F3C592064AC18003E5B14 /* Controller */,
 				8D4F3C582064AC12003E5B14 /* View */,
 				8D4F3C572064AC0A003E5B14 /* Model */,
@@ -111,9 +113,7 @@
 		8D4F3C592064AC18003E5B14 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
-				8D4F3C412064614D003E5B14 /* AppDelegate.swift */,
 				8D4F3C5520646E3C003E5B14 /* Methods.swift */,
-				8D6D44EA20745AB800D6A196 /* DispatchQueue.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
