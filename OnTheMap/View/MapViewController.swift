@@ -17,7 +17,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var logoutButton: UIBarButtonItem!
     @IBOutlet weak var refreshDataButton: UIBarButtonItem!
     
-    var students: [Student] = [Student]()
+    var students: [Student]? = [Student]()
     var annotations = [MKPointAnnotation]()
     
     override func viewDidLoad() {
@@ -27,13 +27,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         downloadUserData()
-        setMapAnnotations()
         configureMap()
     }
     
     func downloadUserData() {
-        print("DOWNLOADING USER DATA")
-        var request = URLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=5")!)
+        print("Beginning request for Student Data.")
+        var request = URLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100")!)
         request.httpMethod = "GET"
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
         request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
@@ -54,25 +53,25 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 print("Not dictionary.")
                 return
             }
-            
+            print("Student dictionary created.")
             self.students = Student.studentsFromRequest(studentDictionary)
             
-            print("Printing students after parsing: \(self.students)")
             print("\nTask beginning\n")
-            
-            //Attempting to add annotations to map here:
-//            performUIUpdatesOnMain {
-//                self.mapView.addAnnotations(self.annotations)
-//            }
-            
+            if let students = self.students {
+                performUIUpdatesOnMain {
+                    self.setMapAnnotations(students: students)
+                    print("Annotations set on Main thread.")
+                }
+            }
         }
         task.resume()
-        print("Printing Students after task:\n\(self.students)")
+        print("Data collected and task initiated.")
     }
     
-    func setMapAnnotations() {
+    func setMapAnnotations(students: [Student]) {
         print("Setting annotations in ViewWillAppear")
         print("Printing students during Annotation setup: \(students)")
+        
         
         for student in students {
             
@@ -87,22 +86,20 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             annotation.title = student.firstName + " " + student.lastName
             annotation.subtitle = student.mediaURL
             
-            annotations.append(annotation)
+            self.annotations.append(annotation)
             print("Annotations sent to dictionary.")
             
-            print("Attempting to add annotions directly, one at a time")
-            self.mapView.addAnnotation(annotation)
         }
+        self.mapView.addAnnotations(annotations)
+
     }
     
     func configureMap() {
-        print("CONFIGURING MAP")
         let location = CLLocationCoordinate2DMake(37.786576, -122.394411)
-        let mapSpan = MKCoordinateSpanMake(25.0, 25.0)
+        let mapSpan = MKCoordinateSpanMake(100.0, 100.0)
         let mapRegion = MKCoordinateRegionMake(location, mapSpan)
-        let _ = MKUserLocation()
         self.mapView.setRegion(mapRegion, animated: true)
-        self.mapView.showsUserLocation = true
+        print("Map is configured.")
         
     }
     
@@ -134,8 +131,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        
-        print("\nmapView viewFor has begun\n")
         let reuseId = "pin"
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
@@ -154,6 +149,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
         print("\nmapView annotationView has begun\n")
+        
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.shared
             if let toOpen = view.annotation?.subtitle! {

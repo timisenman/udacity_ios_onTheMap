@@ -15,5 +15,7 @@ func performUIUpdatesOnMain(_ updates: @escaping () -> Void) {
 }
 
 func prioritizeThread(_ function: @escaping () -> Void) {
-    
+    DispatchQueue.global(qos: .userInitiated).async {
+        function()
+    }
 }
