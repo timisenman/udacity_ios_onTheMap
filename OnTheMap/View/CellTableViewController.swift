@@ -81,13 +81,16 @@ class CellTableViewController: UITableViewController {
             }
             
             self.students = Student.studentsFromRequest(studentData)
+            print("Student data during Task:\n\(self.students)")
             performUIUpdatesOnMain {
                 self.tableView.reloadData()
             }
             
         }
         task.resume()
+        print("Student data after Task:\n\(self.students)")
     }
+    
     
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -115,10 +118,6 @@ class CellTableViewController: UITableViewController {
             }
         }
     }
-    
-    
-    
-    
 }
 
 

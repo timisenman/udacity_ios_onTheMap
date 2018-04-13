@@ -13,6 +13,7 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var locationTextField: UITextField!
     @IBOutlet weak var websiteTextField: UITextField!
     @IBOutlet weak var confirmLocButton: UIButton!
+    @IBOutlet weak var exitSetLocationButton: UIBarButtonItem!
     
     let textField = TextFieldDelegate()
     
@@ -40,6 +41,11 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate {
             confirmDetails.newLocation = locationTextField.text!
             confirmDetails.newWebsite = websiteTextField.text!
         }
+    }
+    
+    
+    @IBAction func exitSetLocationAction(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     

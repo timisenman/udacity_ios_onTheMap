@@ -13,3 +13,7 @@ func performUIUpdatesOnMain(_ updates: @escaping () -> Void) {
         updates()
     }
 }
+
+func prioritizeThread(_ function: @escaping () -> Void) {
+    
+}
