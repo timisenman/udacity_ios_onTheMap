@@ -15,7 +15,7 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View is up.")
+        print("Login View is up.")
         
         // Do any additional setup after loading the view.
     }
@@ -42,15 +42,11 @@ class LoginViewController: UIViewController {
                 print("no data")
                 return
             }
-            print("This is your data: \n\(data)")
             
             let range = Range(5..<data.count)
             let newData = data.subdata(in: range)
             
-            print(String(data: newData, encoding: .utf8)!)
-            
             let json: [String:AnyObject]!
-            
             do {
                 json = try? JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String:AnyObject]
             }
@@ -59,17 +55,15 @@ class LoginViewController: UIViewController {
                 print("No account data")
                 return
             }
-            print(accountData)
             
             guard let isRegistered = accountData["registered"] as? Int else {
                 print("Account not registered")
                 return
             }
             
-            print(isRegistered)
             
             if isRegistered == 1 {
-                print("\nThis user is registered.")
+                print("This user is registered.")
                 
                 performUIUpdatesOnMain {
                     let tabVC: UITabBarController
@@ -77,11 +71,11 @@ class LoginViewController: UIViewController {
                     self.present(tabVC, animated: true, completion: nil)
                 }
             } else {
-                print("\nUser credentials not recognized.")
+                print("User credentials not recognized.")
             }
         }
         
         task.resume()
-        print("\nTask complete.")
+        print("Task complete.")
     }
 }

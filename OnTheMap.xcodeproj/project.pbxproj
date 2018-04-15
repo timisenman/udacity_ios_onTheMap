@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D34EE8120780AED00D0A4D7 /* ToolBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D34EE8020780AED00D0A4D7 /* ToolBarDelegate.swift */; };
 		8D34EE832078170100D0A4D7 /* SetLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D34EE822078170100D0A4D7 /* SetLocationViewController.swift */; };
 		8D34EE852078171500D0A4D7 /* ConfirmLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D34EE842078171500D0A4D7 /* ConfirmLocationViewController.swift */; };
 		8D4F3C422064614D003E5B14 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D4F3C412064614D003E5B14 /* AppDelegate.swift */; };
@@ -23,12 +22,10 @@
 		8DA8F31D206E0FDE005F280E /* StudentData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA8F31C206E0FDE005F280E /* StudentData.swift */; };
 		8DEF6BE0207F407C005A3C82 /* TextFieldDelegates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF6BDF207F407C005A3C82 /* TextFieldDelegates.swift */; };
 		8DEF6BE2207F4FA6005A3C82 /* CustomCellViewControllerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF6BE1207F4FA6005A3C82 /* CustomCellViewControllerTableViewCell.swift */; };
-		8DEF6BE420808248005A3C82 /* MapAnnotationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF6BE320808248005A3C82 /* MapAnnotationViewController.swift */; };
 		8DFB90A02076CC09002E528F /* LoginData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFB909F2076CC09002E528F /* LoginData.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		8D34EE8020780AED00D0A4D7 /* ToolBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolBarDelegate.swift; sourceTree = "<group>"; };
 		8D34EE822078170100D0A4D7 /* SetLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetLocationViewController.swift; sourceTree = "<group>"; };
 		8D34EE842078171500D0A4D7 /* ConfirmLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfirmLocationViewController.swift; sourceTree = "<group>"; };
 		8D4F3C3E2064614D003E5B14 /* OnTheMap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OnTheMap.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -46,7 +43,6 @@
 		8DA8F31C206E0FDE005F280E /* StudentData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StudentData.swift; sourceTree = "<group>"; };
 		8DEF6BDF207F407C005A3C82 /* TextFieldDelegates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegates.swift; sourceTree = "<group>"; };
 		8DEF6BE1207F4FA6005A3C82 /* CustomCellViewControllerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCellViewControllerTableViewCell.swift; sourceTree = "<group>"; };
-		8DEF6BE320808248005A3C82 /* MapAnnotationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapAnnotationViewController.swift; sourceTree = "<group>"; };
 		8DFB909F2076CC09002E528F /* LoginData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginData.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -110,11 +106,9 @@
 				8D4F3C432064614D003E5B14 /* CellTableViewController.swift */,
 				8DA8F31A206E0B7F005F280E /* LoginViewController.swift */,
 				8D8BC04C2070533B00EFD1D8 /* MapViewController.swift */,
-				8D34EE8020780AED00D0A4D7 /* ToolBarDelegate.swift */,
 				8D34EE822078170100D0A4D7 /* SetLocationViewController.swift */,
 				8D34EE842078171500D0A4D7 /* ConfirmLocationViewController.swift */,
 				8DEF6BE1207F4FA6005A3C82 /* CustomCellViewControllerTableViewCell.swift */,
-				8DEF6BE320808248005A3C82 /* MapAnnotationViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -210,8 +204,6 @@
 				8D4F3C422064614D003E5B14 /* AppDelegate.swift in Sources */,
 				8D34EE852078171500D0A4D7 /* ConfirmLocationViewController.swift in Sources */,
 				8D4F3C5420646AC7003E5B14 /* Constants.swift in Sources */,
-				8D34EE8120780AED00D0A4D7 /* ToolBarDelegate.swift in Sources */,
-				8DEF6BE420808248005A3C82 /* MapAnnotationViewController.swift in Sources */,
 				8DEF6BE2207F4FA6005A3C82 /* CustomCellViewControllerTableViewCell.swift in Sources */,
 				8D8BC04D2070533B00EFD1D8 /* MapViewController.swift in Sources */,
 			);

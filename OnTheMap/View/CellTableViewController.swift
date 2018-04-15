@@ -20,7 +20,7 @@ class CellTableViewController: UITableViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        print("hello, cells")
+        print("TableView has loaded.")
         
     }
     
@@ -81,14 +81,13 @@ class CellTableViewController: UITableViewController {
             }
             
             self.students = Student.studentsFromRequest(studentData)
-            print("Student data during Task:\n\(self.students)")
             performUIUpdatesOnMain {
                 self.tableView.reloadData()
             }
             
         }
         task.resume()
-        print("Student data after Task:\n\(self.students)")
+        print("TableView task complete.")
     }
     
     
@@ -98,7 +97,7 @@ class CellTableViewController: UITableViewController {
         let student = students[(indexPath as NSIndexPath).row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! CustomCellViewControllerTableViewCell
         
-        cell.studentName.text = student.firstName + " " + student.lastName
+        cell.studentName.text = "\(student.firstName) \(student.lastName)"
         cell.studentSite.text = student.mediaURL
         
         return cell

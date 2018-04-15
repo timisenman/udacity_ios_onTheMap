@@ -53,10 +53,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 print("Not dictionary.")
                 return
             }
-            print("Student dictionary created.")
+
             self.students = Student.studentsFromRequest(studentDictionary)
             
-            print("\nTask beginning\n")
             if let students = self.students {
                 performUIUpdatesOnMain {
                     self.setMapAnnotations(students: students)
@@ -70,12 +69,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     
     func setMapAnnotations(students: [Student]) {
         print("Setting annotations in ViewWillAppear")
-        print("Printing students during Annotation setup: \(students)")
-        
-        
         for student in students {
-            
-            print("Student:\n\(student)")
             
             let lat = CLLocationDegrees(student.latitude)
             let long = CLLocationDegrees(student.longitude)
@@ -83,11 +77,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
             let annotation = MKPointAnnotation()
             annotation.coordinate = coordinate
-            annotation.title = student.firstName + " " + student.lastName
+            annotation.title = "\(student.firstName) \(student.lastName)"
             annotation.subtitle = student.mediaURL
             
             self.annotations.append(annotation)
-            print("Annotations sent to dictionary.")
             
         }
         self.mapView.addAnnotations(annotations)
@@ -121,13 +114,18 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             }
             let range = Range(5..<data!.count)
             let newData = data?.subdata(in: range) /* subset response data! */
-            print(String(data: newData!, encoding: .utf8)!)
         }
         task.resume()
+        print("Logging out user from MapView.")
         
         let loginVC: UIViewController = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! UIViewController
         self.present(loginVC, animated: true, completion: nil)
+        print("New Login page presented.")
 
+    }
+    
+    @IBAction func addNewLocation(_ sender: Any) {
+        
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -148,7 +146,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        print("\nmapView annotationView has begun\n")
+        print("MapView annotationView has begun")
         
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.shared
