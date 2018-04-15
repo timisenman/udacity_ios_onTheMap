@@ -42,8 +42,21 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
         print("Confirm button pressed.")
         print("Getting new address from String.")
         self.getAddressFromString()
-        performSegue(withIdentifier: Constants.Segues.confirmLocation, sender: self)
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        print("\nPREPARING FOR SEGUE\n")
+        if segue.identifier == Constants.Segues.confirmLocation {
+            print("Setting segue variables")
+            let confirmDetails = segue.destination as! ConfirmLocationViewController
+            confirmDetails.newLocation = locationTextField.text!
+            confirmDetails.newWebsite = websiteTextField.text!
+            print("Attempting to set new Lat/Long")
+            confirmDetails.newLat = selectedLat
+            confirmDetails.newLong = selectedLong
+        }
+    }
+    
     
     @IBAction func exitSetLocationAction(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
@@ -76,24 +89,12 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
                         self.selectedLat = Double(coordinate.latitude)
                         print("New Lat/Long assigned.")
                         print("New lat, long:\(self.selectedLat), \(self.selectedLong) ")
+                        self.performSegue(withIdentifier: Constants.Segues.confirmLocation, sender: self)
                     }
                 } else {
                     print("Coordinates could not be set.")
                 }
             }
-        }
-    }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print("\nPREPARING FOR SEGUE\n")
-        if segue.identifier == Constants.Segues.confirmLocation {
-            print("Setting segue variables")
-            let confirmDetails = segue.destination as! ConfirmLocationViewController
-            confirmDetails.newLocation = locationTextField.text!
-            confirmDetails.newWebsite = websiteTextField.text!
-            print("Attempting to set new Lat/Long")
-            confirmDetails.newLat = selectedLat
-            confirmDetails.newLong = selectedLong
         }
     }
 }
