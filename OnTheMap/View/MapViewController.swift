@@ -10,7 +10,7 @@ import UIKit
 import MapKit
 
 class MapViewController: UIViewController, MKMapViewDelegate {
-
+    
     @IBOutlet weak var mapViewToolBar: UINavigationItem!
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var addLocationButton: UIBarButtonItem!
@@ -31,7 +31,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func downloadUserData() {
-        print("Beginning request for Student Data.")
         var request = URLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100")!)
         request.httpMethod = "GET"
         request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
@@ -39,8 +38,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
-            print("request started")
-            if error != nil { // Handle error…
+            if error != nil {
                 return
             }
             
@@ -53,22 +51,19 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 print("Not dictionary.")
                 return
             }
-
+            
             self.students = Student.studentsFromRequest(studentDictionary)
             
             if let students = self.students {
                 performUIUpdatesOnMain {
                     self.setMapAnnotations(students: students)
-                    print("Annotations set on Main thread.")
                 }
             }
         }
         task.resume()
-        print("Data collected and task initiated.")
     }
     
     func setMapAnnotations(students: [Student]) {
-        print("Setting annotations in ViewWillAppear")
         for student in students {
             
             let lat = CLLocationDegrees(student.latitude)
@@ -84,7 +79,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             
         }
         self.mapView.addAnnotations(annotations)
-
+        
     }
     
     func configureMap() {
@@ -92,7 +87,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         let mapSpan = MKCoordinateSpanMake(100.0, 100.0)
         let mapRegion = MKCoordinateRegionMake(location, mapSpan)
         self.mapView.setRegion(mapRegion, animated: true)
-        print("Map is configured.")
         
     }
     
@@ -113,15 +107,13 @@ class MapViewController: UIViewController, MKMapViewDelegate {
                 return
             }
             let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range) /* subset response data! */
+            let newData = data?.subdata(in: range)
         }
         task.resume()
-        print("Logging out user from MapView.")
         
         let loginVC: UIViewController = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! UIViewController
         self.present(loginVC, animated: true, completion: nil)
-        print("New Login page presented.")
-
+        
     }
     
     @IBAction func addNewLocation(_ sender: Any) {
@@ -146,13 +138,12 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
-        print("MapView annotationView has begun")
         
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.shared
             if let toOpen = view.annotation?.subtitle! {
                 app.open(URL(string: toOpen)!, options: [:]) { (success) in
-                    print("URL opened successfully.")
+                    return
                 }
             }
         }

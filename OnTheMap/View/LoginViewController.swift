@@ -13,15 +13,7 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var accountTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        print("Login View is up.")
-        
-        // Do any additional setup after loading the view.
-    }
-    
     @IBAction func submitLoginButton(_ sender: Any) {
-        print("Credentials submitted")
         let url = URL(string:"https://www.udacity.com/api/session")
         var request = URLRequest(url: url!)
         request.httpMethod = "POST"
@@ -32,7 +24,6 @@ class LoginViewController: UIViewController {
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
             
-            print("Task has begun.")
             guard (error == nil) else {
                 print(error!)
                 return
@@ -61,10 +52,7 @@ class LoginViewController: UIViewController {
                 return
             }
             
-            
             if isRegistered == 1 {
-                print("This user is registered.")
-                
                 performUIUpdatesOnMain {
                     let tabVC: UITabBarController
                     tabVC = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
@@ -72,10 +60,9 @@ class LoginViewController: UIViewController {
                 }
             } else {
                 print("User credentials not recognized.")
+                //Need Warning prompt that the credentials were invalid
             }
         }
-        
         task.resume()
-        print("Task complete.")
     }
 }

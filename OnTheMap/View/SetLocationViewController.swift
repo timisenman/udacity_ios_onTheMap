@@ -27,7 +27,6 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("View has loaded.")
         
         self.locationTextField.text = locationPlaceholderText
         self.websiteTextField.text = "Web Address"
@@ -39,19 +38,14 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
 
     //Segue to ConfirmLocation View
     @IBAction func confirmDetails(_ sender: Any) {
-        print("Confirm button pressed.")
-        print("Getting new address from String.")
         self.getAddressFromString()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        print("\nPREPARING FOR SEGUE\n")
         if segue.identifier == Constants.Segues.confirmLocation {
-            print("Setting segue variables")
             let confirmDetails = segue.destination as! ConfirmLocationViewController
             confirmDetails.newLocation = locationTextField.text!
             confirmDetails.newWebsite = websiteTextField.text!
-            print("Attempting to set new Lat/Long")
             confirmDetails.newLat = selectedLat
             confirmDetails.newLong = selectedLong
         }
@@ -63,7 +57,6 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
     }
     
     func getAddressFromString() {
-        print("Getting address from string.")
         if locationTextField.text != locationPlaceholderText {
             geocoder.geocodeAddressString(locationTextField.text!) { (placemark, error) in
                 guard (error == nil) else {
@@ -78,17 +71,12 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
                 
                 var locCoordinates: CLLocation?
                 locCoordinates = location.first?.location
-                print("\nLocation from first location of Placemark:\n\(locCoordinates!))")
                 
                 if let coordinates = locCoordinates {
                     performUIUpdatesOnMain {
                         let coordinate = coordinates.coordinate
-                        print("\nLatitude: \(coordinate.latitude)")
-                        print("Longitude: \(coordinate.longitude)")
                         self.selectedLong = Double(coordinate.longitude)
                         self.selectedLat = Double(coordinate.latitude)
-                        print("New Lat/Long assigned.")
-                        print("New lat, long:\(self.selectedLat), \(self.selectedLong) ")
                         self.performSegue(withIdentifier: Constants.Segues.confirmLocation, sender: self)
                     }
                 } else {

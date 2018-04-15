@@ -24,12 +24,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     var newLat: Double?
     let tempLat = 35.689506
     let tempLong = 139.6917
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         if let lat = newLat, let long = newLong {
@@ -45,7 +39,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         let mapSpan = MKCoordinateSpanMake(5.0, 5.0)
         let mapRegion = MKCoordinateRegionMake(location, mapSpan)
         self.mapView.setRegion(mapRegion, animated: true)
-        print("Map is configured.")
         
     }
     
@@ -64,36 +57,26 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
             print(String(data: data!, encoding: .utf8)!)
             
             if (error == nil) {
-                print("No error. Dismissing Confirmation View.")
                 performUIUpdatesOnMain {
                     self.dismiss(animated: true, completion: nil)
                 }
-                
-                
-                
             } else {
                 print(error!)
             }
         }
         task.resume()
-        
-        
     }
     
     func setMapAnnotations(latitude: Double, longitude: Double) {
-        print("Setting annotations in ViewWillAppear")
         
         let lat = CLLocationDegrees(latitude)
         let long = CLLocationDegrees(longitude)
-        
         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
         
         self.annotations.append(annotation)
-        
         self.mapView.addAnnotations(annotations)
-        
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -105,12 +88,10 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
             pinView!.canShowCallout = true
             pinView!.pinTintColor = .red
             pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-        }
-        else {
+        } else {
             pinView!.annotation = annotation
         }
         
         return pinView
     }
-    
 }

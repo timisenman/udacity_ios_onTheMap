@@ -63,12 +63,12 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="Pfa-mT-JL2" userLabel="Add Location">
+                            <barButtonItem image="icon_pin" id="Pfa-mT-JL2" userLabel="Add Location">
                                 <connections>
                                     <segue destination="QVt-17-Jv5" kind="show" id="wl9-bA-qWO"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="refresh" id="Fez-0o-lFb"/>
+                            <barButtonItem image="icon_refresh" id="Fez-0o-lFb"/>
                         </rightBarButtonItems>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
@@ -262,12 +262,12 @@
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="add" id="sbE-9g-x82" userLabel="Add Location">
+                            <barButtonItem image="icon_pin" id="sbE-9g-x82" userLabel="Add Location">
                                 <connections>
                                     <segue destination="QVt-17-Jv5" kind="show" id="kna-CF-QK1"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem systemItem="refresh" id="nkL-wD-VLJ"/>
+                            <barButtonItem image="icon_refresh" id="nkL-wD-VLJ"/>
                         </rightBarButtonItems>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>
@@ -419,6 +419,7 @@
         <image name="icon_listview-deselected" width="75" height="50"/>
         <image name="icon_mapview-deselected" width="75" height="50"/>
         <image name="icon_pin" width="24" height="24"/>
+        <image name="icon_refresh" width="24" height="24"/>
         <image name="logo-u" width="62" height="62"/>
     </resources>
     <inferredMetricsTieBreakers>

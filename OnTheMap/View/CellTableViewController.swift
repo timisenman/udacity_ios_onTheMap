@@ -13,16 +13,7 @@ class CellTableViewController: UITableViewController {
     @IBOutlet weak var logoutButton: UIBarButtonItem!
     @IBOutlet weak var addLocationButton: UIBarButtonItem!
     
-    
     var students: [Student] = [Student]()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-        print("TableView has loaded.")
-        
-    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -87,7 +78,6 @@ class CellTableViewController: UITableViewController {
             
         }
         task.resume()
-        print("TableView task complete.")
     }
     
     
