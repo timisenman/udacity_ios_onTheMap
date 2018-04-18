@@ -27,7 +27,13 @@ class OTMClient: NSObject {
         
     }
     
-    func login(request: URLRequest, completionHandlerForLogin: @escaping (_ accountData: [String:AnyObject], _ sessionId: String, _ result: Int) -> Void) {
+    func loginWith(userName: String, password: String, completionHandlerForLogin: @escaping (_ success: Bool, _ error: String?) -> Void) {
+        let url = URL(string: Constants.UdacityConstants.UdacitySession)
+        var request = URLRequest(url: url!)
+        request.httpMethod = "POST"
+        request.addValue(Constants.UdacityConstants.HeaderJSON, forHTTPHeaderField: Constants.UdacityConstants.HeaderAccept)
+        request.addValue(Constants.UdacityConstants.HeaderJSON, forHTTPHeaderField: Constants.UdacityConstants.HeaderContent)
+        request.httpBody = "{\"udacity\": {\"username\": \"\(userName)\", \"password\": \"\(password)\"}}".data(using: .utf8)
         
         let session = URLSession.shared
         let task = session.dataTask(with: request) { (data, response, error) in
@@ -51,26 +57,29 @@ class OTMClient: NSObject {
             }
             
             guard let accountData = json[Constants.LoginResponseKeys.account] as? [String:AnyObject] else {
-                print("No account data during login.")
+                completionHandlerForLogin(false, "No account data during login.")
                 return
             }
             
             guard let sessionData = json[Constants.LoginResponseKeys.session] as? [String:AnyObject] else {
-                print("Could not grab session data during login.")
+                completionHandlerForLogin(false, "Could not grab session data during login.")
                 return
             }
             
             guard let sessionId = sessionData[Constants.SessionResponseKeys.id] as? String else {
-                print("Could not access sessionID.")
+                completionHandlerForLogin(false, "Could not access sessionID.")
                 return
             }
             
-            guard let isRegistered = accountData[Constants.AccountResponseKeys.registered] as? Int else {
-                print("Account not registered")
-                return
+            loggedInUser["id"] = sessionId
+            loggedInUser["uniqueKey"] = String(describing: accountData["key"]!)
+            if let uniqueKey = loggedInUser["uniqueKey"] {
+                self.taskForLoggedInStudentData(ofStudent: uniqueKey) { (firstName, lastName) in
+                    loggedInUser["firstName"] = firstName
+                    loggedInUser["lastName"] = lastName
+                }
             }
-            
-            completionHandlerForLogin(accountData, sessionId, isRegistered)
+            completionHandlerForLogin(true, nil)
         }
         task.resume()
     }
