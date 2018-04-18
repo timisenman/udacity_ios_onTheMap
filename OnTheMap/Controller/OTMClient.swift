@@ -17,6 +17,16 @@ class OTMClient: NSObject {
         super.init()
     }
     
+    func displayError(onViewController view: UIViewController, title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+        view.present(alert, animated: true, completion: nil)
+    }
+    
+    func getAccountData() {
+        
+    }
+    
     func login(request: URLRequest, completionHandlerForLogin: @escaping (_ accountData: [String:AnyObject], _ sessionId: String, _ result: Int) -> Void) {
         
         let session = URLSession.shared
@@ -28,7 +38,7 @@ class OTMClient: NSObject {
             }
             
             guard let data = data else {
-                print("no data")
+                print("No response during login.")
                 return
             }
             
@@ -40,23 +50,22 @@ class OTMClient: NSObject {
                 json = try? JSONSerialization.jsonObject(with: newData, options: .allowFragments) as! [String:AnyObject]
             }
             
-            guard let accountData = json["account"] as? [String:AnyObject] else {
-                print("No account data")
+            guard let accountData = json[Constants.LoginResponseKeys.account] as? [String:AnyObject] else {
+                print("No account data during login.")
                 return
             }
             
-            
-            guard let sessionData = json["session"] as? [String:AnyObject] else {
-                print("Could not grab session data")
+            guard let sessionData = json[Constants.LoginResponseKeys.session] as? [String:AnyObject] else {
+                print("Could not grab session data during login.")
                 return
             }
             
-            guard let sessionId = sessionData["id"] as? String else {
+            guard let sessionId = sessionData[Constants.SessionResponseKeys.id] as? String else {
                 print("Could not access sessionID.")
                 return
             }
             
-            guard let isRegistered = accountData["registered"] as? Int else {
+            guard let isRegistered = accountData[Constants.AccountResponseKeys.registered] as? Int else {
                 print("Account not registered")
                 return
             }
@@ -91,17 +100,13 @@ class OTMClient: NSObject {
             }
             
             if let firstName = userData["first_name"], let lastName = userData["last_name"] {
-//                loggedInUser["firstName"] = firstName as? String
-//                loggedInUser["lastName"] = lastName as? String
                 completionHandlerForLoggedIn(firstName as! String, lastName as! String)
-//                print("Logged in data after successful login: \(loggedInUser)")
             }
         }
         task.resume()
     }
     
     func taskForGet(request: URLRequest, completionHanlderForGet: @escaping(_ studentData: [Student]) -> Void) {
-
         let task = session.dataTask(with: request) { data, response, error in
             if error != nil {
                 return

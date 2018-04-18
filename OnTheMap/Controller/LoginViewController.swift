@@ -28,24 +28,24 @@ class LoginViewController: UIViewController {
                 //Attempting to set global variables
                 loggedInUser["id"] = sessionId
                 loggedInUser["uniqueKey"] = String(describing: accountData["key"]!)
-                print("\nLogged in User Data: \(loggedInUser)\n")
                 
                 performUIUpdatesOnMain {
                     let tabVC: UITabBarController
                     tabVC = self.storyboard?.instantiateViewController(withIdentifier: "TabBarController") as! UITabBarController
                     self.present(tabVC, animated: true, completion: nil)
                 }
-            } else {
-                print("User credentials not recognized.")
-                //Need Warning prompt that the credentials were invalid
-            }
-            
-            if let uniqueKey = loggedInUser["uniqueKey"] {
-                OTMClient.sharedInstance().taskForLoggedInStudentData(ofStudent: uniqueKey) { (firstName, lastName) in
-                    loggedInUser["firstName"] = firstName
-                    loggedInUser["lastName"] = lastName
-                    print("Logged in data after successful login: \(loggedInUser)")
+                
+                if let uniqueKey = loggedInUser["uniqueKey"] {
+                    OTMClient.sharedInstance().taskForLoggedInStudentData(ofStudent: uniqueKey) { (firstName, lastName) in
+                        loggedInUser["firstName"] = firstName
+                        loggedInUser["lastName"] = lastName
+                    }
                 }
+            } else {
+                //Where I think a prompt should go
+                let alert = UIAlertController(title: "Oops!", message: "Your account or password were incorrect.", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "Try again", style: .default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
             }
         }
     }

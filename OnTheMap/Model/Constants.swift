@@ -35,6 +35,21 @@ struct Constants {
         
     }
     
+    struct LoginResponseKeys {
+        static let account = "account"
+        static let session = "session"
+    }
+    
+    struct SessionResponseKeys {
+        static let id = "id"
+        static let expiration = "expiration"
+    }
+    
+    struct AccountResponseKeys {
+        static let key = "key"
+        static let registered = "registered"
+    }
+    
     struct StudentResponseKeys {
         
         static let objectKey = "objectId"

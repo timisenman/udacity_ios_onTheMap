@@ -16,37 +16,44 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
     @IBOutlet weak var websiteTextField: UITextField!
     @IBOutlet weak var confirmLocButton: UIButton!
     @IBOutlet weak var exitSetLocationButton: UIBarButtonItem!
+    @IBOutlet weak var mapIcon: UIImageView!
     
     let textField = TextFieldDelegate()
+    var activityIndicator = UIActivityIndicatorView()
     let geocoder = CLGeocoder()
     var placemarks: [CLPlacemark?] = [CLPlacemark]()
     var selectedLat: Double?
     var selectedLong: Double?
     
+    //Usable when delegate is working
     let locationPlaceholderText = "Place of Study"
-    
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//        self.locationTextField.text = locationPlaceholderText
-//        self.websiteTextField.text = "Web Address"
-//        self.locationTextField.delegate = textField
-//        self.websiteTextField.delegate = textField
-//        OTMClient.sharedInstance().getLoggedInStudentData()
-//    }
+    let websitePlaceholderText = "Website"
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        self.locationTextField.text = locationPlaceholderText
-        self.websiteTextField.text = "Web Address"
         self.locationTextField.delegate = textField
         self.websiteTextField.delegate = textField
-        
-        
+        self.mapIcon.isHidden = false
     }
-
+    
+    func configureActivityIndicator() {
+        self.mapIcon.isHidden = true
+        self.activityIndicator.center = self.mapIcon.center
+        self.activityIndicator.hidesWhenStopped = true
+        self.activityIndicator.activityIndicatorViewStyle = .gray
+        view.addSubview(self.activityIndicator)
+        self.activityIndicator.startAnimating()
+    }
+    
     @IBAction func confirmDetails(_ sender: Any) {
-        self.getAddressFromString()
-        print("User info after confirming details: \n\(loggedInUser)")
+        if websiteTextField.text?.contains("https://") == false {
+            let alert = UIAlertController(title: "Oops!", message: "You need 'https://' in your address.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        } else {
+            configureActivityIndicator()
+            self.getAddressFromString()
+        }
     }
     
     @IBAction func exitSetLocationAction(_ sender: Any) {
@@ -85,6 +92,7 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
                         self.selectedLong = Double(coordinate.longitude)
                         self.selectedLat = Double(coordinate.latitude)
                         self.performSegue(withIdentifier: Constants.Segues.confirmLocation, sender: self)
+                        self.activityIndicator.stopAnimating()
                     }
                 } else {
                     print("Coordinates could not be set.")
