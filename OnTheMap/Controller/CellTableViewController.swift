@@ -28,7 +28,6 @@ class CellTableViewController: UITableViewController {
         self.dismiss(animated: true, completion: nil)
     }
     
-    
     func downloadUserData() {
         var request = URLRequest(url: URL(string: Constants.UdacityConstants.GetStudentData)!)
         request.httpMethod = "GET"
@@ -42,8 +41,6 @@ class CellTableViewController: UITableViewController {
             }
         }
     }
-    
-    
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "studentsCells"

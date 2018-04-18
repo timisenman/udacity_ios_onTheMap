@@ -23,10 +23,6 @@ class OTMClient: NSObject {
         view.present(alert, animated: true, completion: nil)
     }
     
-    func getAccountData() {
-        
-    }
-    
     func loginWith(userName: String, password: String, completionHandlerForLogin: @escaping (_ success: Bool, _ error: String?) -> Void) {
         let url = URL(string: Constants.UdacityConstants.UdacitySession)
         var request = URLRequest(url: url!)
@@ -39,12 +35,12 @@ class OTMClient: NSObject {
         let task = session.dataTask(with: request) { (data, response, error) in
             
             guard (error == nil) else {
-                print(error!)
+                completionHandlerForLogin(false, "Encountered error: \(error!)")
                 return
             }
             
             guard let data = data else {
-                print("No response during login.")
+                completionHandlerForLogin(false, "No response during login.")
                 return
             }
             
@@ -150,7 +146,7 @@ class OTMClient: NSObject {
         }
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
-            if error != nil { // Handle error…
+            if error != nil {
                 return
             }
             
@@ -160,7 +156,7 @@ class OTMClient: NSObject {
             }
             
             let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range) /* subset response data! */
+            let newData = data?.subdata(in: range) 
             
             var parsedData: [String:AnyObject]!
             do {

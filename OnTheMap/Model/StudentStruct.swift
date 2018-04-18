@@ -42,7 +42,6 @@ struct Student {
         }
         return studentsArray
     }
-    
 }
 
 

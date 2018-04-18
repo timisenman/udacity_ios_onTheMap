@@ -32,7 +32,6 @@ struct Constants {
         static let GetStudentData = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100" 
         static let PostStudentData =  "https://parse.udacity.com/parse/classes/StudentLocation"
         static let GetLoggedInData = "https://www.udacity.com/api/users/"
-        
     }
     
     struct LoginResponseKeys {
@@ -51,7 +50,6 @@ struct Constants {
     }
     
     struct StudentResponseKeys {
-        
         static let objectKey = "objectId"
         static let uniqueKeyKey = "uniqueKey"
         static let firstNameKey = "firstName"
@@ -61,8 +59,7 @@ struct Constants {
         static let latitudeKey = "latitude"
         static let longitudeKey = "longitude"
         static let createAtKey = "createdAt"
-        static let updatedAtKey = "updatedAt"
-        
+        static let updatedAtKey = "updatedAt"  
     }
     
     struct Segues {

@@ -23,7 +23,6 @@
 		8DEE311020855D0A00A6253B /* ReceivedData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEE310F20855D0A00A6253B /* ReceivedData.swift */; };
 		8DEF6BE0207F407C005A3C82 /* TextFieldDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF6BDF207F407C005A3C82 /* TextFieldDelegate.swift */; };
 		8DEF6BE2207F4FA6005A3C82 /* CustomCellViewControllerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DEF6BE1207F4FA6005A3C82 /* CustomCellViewControllerTableViewCell.swift */; };
-		8DFB90A02076CC09002E528F /* LoginStruct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFB909F2076CC09002E528F /* LoginStruct.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -45,7 +44,6 @@
 		8DEE310F20855D0A00A6253B /* ReceivedData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivedData.swift; sourceTree = "<group>"; };
 		8DEF6BDF207F407C005A3C82 /* TextFieldDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldDelegate.swift; sourceTree = "<group>"; };
 		8DEF6BE1207F4FA6005A3C82 /* CustomCellViewControllerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomCellViewControllerTableViewCell.swift; sourceTree = "<group>"; };
-		8DFB909F2076CC09002E528F /* LoginStruct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginStruct.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,7 +95,6 @@
 			children = (
 				8D4F3C5320646AC7003E5B14 /* Constants.swift */,
 				8DA8F31C206E0FDE005F280E /* StudentStruct.swift */,
-				8DFB909F2076CC09002E528F /* LoginStruct.swift */,
 				8DEE310F20855D0A00A6253B /* ReceivedData.swift */,
 			);
 			path = Model;
@@ -200,7 +197,6 @@
 				8DA8F31B206E0B7F005F280E /* LoginViewController.swift in Sources */,
 				8DA8F31D206E0FDE005F280E /* StudentStruct.swift in Sources */,
 				8DEF6BE0207F407C005A3C82 /* TextFieldDelegate.swift in Sources */,
-				8DFB90A02076CC09002E528F /* LoginStruct.swift in Sources */,
 				8D4F3C5620646E3C003E5B14 /* OTMClient.swift in Sources */,
 				8D6D44EB20745AB800D6A196 /* DispatchQueue.swift in Sources */,
 				8D4F3C442064614D003E5B14 /* CellTableViewController.swift in Sources */,

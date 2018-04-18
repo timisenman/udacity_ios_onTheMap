@@ -69,7 +69,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         }
         self.dismiss(animated: true, completion: nil)
     }
-    
 
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
