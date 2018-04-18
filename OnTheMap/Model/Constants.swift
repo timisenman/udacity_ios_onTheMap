@@ -20,34 +20,18 @@ struct Constants {
     
     struct UdacityConstants {
         
-        static let UdacityHost = "udacity.com"
-        static let UdacityAPIScheme = "https"
+        static let UdacitySession = "https://www.udacity.com/api/session"
         static let UdacityAPIKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
         static let UdacityApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
         static let UdacityAppIDHeader = "X-Parse-Application-Id"
         static let UdacityAPIKeyHeader = "X-Parse-REST-API-Key"
-        
-    }
-    
-    struct UdacityParamKeys {
-        static let test = "test"
-    }
-    
-    struct ParseConstants {
-        
-        static let UdacityHost = "udacity.com"
-        static let UdacityAPIScheme = "https"
-        static let UdacityAPIKey = "QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY"
-        static let UdacityApplicationID = "QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr"
-        static let UdacityAppIDHeader = "X-Parse-Application-Id"
-        static let UdacityAPIKeyHeader = "X-Parse-REST-API-Key"
-        
-    }
-    
-    struct FacebookConstants {
-        
-        static let FacebookHost = "api.facebook.com"
-        static let FacebookAppID = "365362206864879"
+        static let SignUpFormURL = "https://www.udacity.com/account/auth#!/signup"
+        static let HeaderJSON = "application/json"
+        static let HeaderAccept = "Accept"
+        static let HeaderContent = "Content-Type"
+        static let GetStudentData = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100" 
+        static let PostStudentData =  "https://parse.udacity.com/parse/classes/StudentLocation"
+        static let GetLoggedInData = "https://www.udacity.com/api/users/"
         
     }
     

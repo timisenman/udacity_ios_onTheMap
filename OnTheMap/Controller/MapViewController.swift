@@ -20,52 +20,27 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     var students: [Student]? = [Student]()
     var annotations = [MKPointAnnotation]()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        downloadUserData()
         configureMap()
+        downloadUserData()
     }
     
     func downloadUserData() {
-        var request = URLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation?limit=100")!)
+        var request = URLRequest(url: URL(string: Constants.UdacityConstants.GetStudentData)!)
         request.httpMethod = "GET"
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
+        request.addValue(Constants.UdacityConstants.UdacityApplicationID, forHTTPHeaderField: Constants.UdacityConstants.UdacityAppIDHeader)
+        request.addValue(Constants.UdacityConstants.UdacityAPIKey, forHTTPHeaderField: Constants.UdacityConstants.UdacityAPIKeyHeader)
         
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            if error != nil {
-                return
-            }
-            
-            var results: [String:AnyObject]!
-            do {
-                results = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String:AnyObject]
-            }
-            
-            guard let studentDictionary = results["results"] as? [[String:AnyObject]] else {
-                print("Not dictionary.")
-                return
-            }
-            
-            self.students = Student.studentsFromRequest(studentDictionary)
-            
-            if let students = self.students {
-                performUIUpdatesOnMain {
-                    self.setMapAnnotations(students: students)
-                }
+        OTMClient.sharedInstance().taskForGet(request: request) { (studentData) in
+            performUIUpdatesOnMain {
+                self.setMapAnnotations(students: studentData)
             }
         }
-        task.resume()
     }
     
     func setMapAnnotations(students: [Student]) {
         for student in students {
-            
             let lat = CLLocationDegrees(student.latitude)
             let long = CLLocationDegrees(student.longitude)
             
@@ -76,50 +51,26 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             annotation.subtitle = student.mediaURL
             
             self.annotations.append(annotation)
-            
         }
         self.mapView.addAnnotations(annotations)
-        
     }
     
     func configureMap() {
         let location = CLLocationCoordinate2DMake(37.786576, -122.394411)
-        let mapSpan = MKCoordinateSpanMake(100.0, 100.0)
+        let mapSpan = MKCoordinateSpanMake(25.0, 25.0)
         let mapRegion = MKCoordinateRegionMake(location, mapSpan)
         self.mapView.setRegion(mapRegion, animated: true)
-        
     }
     
     @IBAction func logoutButtonAction(_ sender: Any) {
-        var request = URLRequest(url: URL(string: "https://www.udacity.com/api/session")!)
-        request.httpMethod = "DELETE"
-        var xsrfCookie: HTTPCookie? = nil
-        let sharedCookieStorage = HTTPCookieStorage.shared
-        for cookie in sharedCookieStorage.cookies! {
-            if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
+        OTMClient.sharedInstance().logoutAndDeleteSession { (sessionData) in
+            logoutData = sessionData
+            print("\nLogging Out with: \(logoutData)\n")
         }
-        if let xsrfCookie = xsrfCookie {
-            request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
-        }
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            if error != nil { // Handle error…
-                return
-            }
-            let range = Range(5..<data!.count)
-            let newData = data?.subdata(in: range)
-        }
-        task.resume()
-        
-        let loginVC: UIViewController = self.storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as! UIViewController
-        self.present(loginVC, animated: true, completion: nil)
-        
+        self.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func addNewLocation(_ sender: Any) {
-        
-    }
-    
+
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
@@ -133,7 +84,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         else {
             pinView!.annotation = annotation
         }
-        
         return pinView
     }
     

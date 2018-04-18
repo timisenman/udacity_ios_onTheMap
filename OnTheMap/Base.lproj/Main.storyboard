@@ -65,10 +65,15 @@
                         <rightBarButtonItems>
                             <barButtonItem image="icon_pin" id="Pfa-mT-JL2" userLabel="Add Location">
                                 <connections>
+                                    <action selector="addNewLocation:" destination="Gnz-rx-7n5" id="mLD-bH-Z92"/>
                                     <segue destination="QVt-17-Jv5" kind="show" id="wl9-bA-qWO"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="icon_refresh" id="Fez-0o-lFb"/>
+                            <barButtonItem image="icon_refresh" id="Fez-0o-lFb">
+                                <connections>
+                                    <action selector="refreshUserData:" destination="Gnz-rx-7n5" id="sep-FQ-Fbd"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
@@ -127,19 +132,40 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo-u" translatesAutoresizingMaskIntoConstraints="NO" id="zTa-3c-tSK">
                                 <rect key="frame" x="118" y="176" width="139" height="86"/>
                             </imageView>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="Don't have an account?" translatesAutoresizingMaskIntoConstraints="NO" id="ggd-u8-McK">
+                                <rect key="frame" x="95" y="435" width="138" height="32"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                            <button opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="msD-gf-7O8">
+                                <rect key="frame" x="233" y="435" width="46" height="32"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="11"/>
+                                <state key="normal" title="Sign-up!"/>
+                                <connections>
+                                    <action selector="signUpAction:" destination="EUt-nD-2xr" eventType="touchUpInside" id="wBN-7X-oPU"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="msD-gf-7O8" firstAttribute="top" secondItem="QWz-R2-lTJ" secondAttribute="bottom" constant="8" id="1cY-Gu-87F"/>
                             <constraint firstItem="zTa-3c-tSK" firstAttribute="top" secondItem="6Z4-B8-NbF" secondAttribute="top" constant="156" id="2BX-Q0-jqE"/>
+                            <constraint firstItem="ggd-u8-McK" firstAttribute="top" secondItem="QWz-R2-lTJ" secondAttribute="bottom" constant="8" id="7Bk-qZ-P2v"/>
                             <constraint firstItem="6Z4-B8-NbF" firstAttribute="trailing" secondItem="QWz-R2-lTJ" secondAttribute="trailing" constant="96" id="DFR-RE-2bE"/>
                             <constraint firstItem="xPk-qT-5Fs" firstAttribute="leading" secondItem="NC1-au-0RN" secondAttribute="leading" id="H3i-gz-e98"/>
                             <constraint firstItem="NC1-au-0RN" firstAttribute="top" secondItem="zTa-3c-tSK" secondAttribute="bottom" constant="57" id="KPR-rY-AdJ"/>
+                            <constraint firstItem="ggd-u8-McK" firstAttribute="leading" secondItem="6Z4-B8-NbF" secondAttribute="leading" constant="95" id="KhR-SH-m7h"/>
                             <constraint firstItem="zTa-3c-tSK" firstAttribute="leading" secondItem="6Z4-B8-NbF" secondAttribute="leading" constant="118" id="MOF-ve-aoO"/>
+                            <constraint firstItem="6Z4-B8-NbF" firstAttribute="bottom" secondItem="ggd-u8-McK" secondAttribute="bottom" constant="200" id="QKJ-JJ-Yrn"/>
+                            <constraint firstItem="6Z4-B8-NbF" firstAttribute="trailing" secondItem="msD-gf-7O8" secondAttribute="trailing" constant="96" id="X7L-aQ-Bu2"/>
                             <constraint firstItem="xPk-qT-5Fs" firstAttribute="top" secondItem="NC1-au-0RN" secondAttribute="bottom" constant="8" id="eVb-eP-Vp5"/>
                             <constraint firstItem="xPk-qT-5Fs" firstAttribute="leading" secondItem="QWz-R2-lTJ" secondAttribute="leading" id="g2a-qw-lTf"/>
                             <constraint firstItem="xPk-qT-5Fs" firstAttribute="trailing" secondItem="QWz-R2-lTJ" secondAttribute="trailing" id="hXQ-ny-QGg"/>
                             <constraint firstItem="6Z4-B8-NbF" firstAttribute="bottom" secondItem="zTa-3c-tSK" secondAttribute="bottom" constant="405.5" id="iJ4-Tb-yx4"/>
                             <constraint firstItem="6Z4-B8-NbF" firstAttribute="trailing" secondItem="zTa-3c-tSK" secondAttribute="trailing" constant="118" id="kkw-OF-wfB"/>
+                            <constraint firstItem="msD-gf-7O8" firstAttribute="leading" secondItem="ggd-u8-McK" secondAttribute="trailing" id="soK-go-Cnq"/>
+                            <constraint firstItem="6Z4-B8-NbF" firstAttribute="bottom" secondItem="msD-gf-7O8" secondAttribute="bottom" constant="200" id="uUz-d5-yKe"/>
                             <constraint firstItem="QWz-R2-lTJ" firstAttribute="top" secondItem="xPk-qT-5Fs" secondAttribute="bottom" constant="8.5" id="zKi-lh-to8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Z4-B8-NbF"/>
@@ -147,6 +173,9 @@
                     <connections>
                         <outlet property="accountTextField" destination="NC1-au-0RN" id="1xx-Z0-0Xy"/>
                         <outlet property="passwordTextField" destination="xPk-qT-5Fs" id="hGc-IS-bfN"/>
+                        <outlet property="signUpButton" destination="msD-gf-7O8" id="9xz-86-nlO"/>
+                        <outlet property="signUpText" destination="ggd-u8-McK" id="ZG7-c5-WSU"/>
+                        <segue destination="QT7-uQ-1e8" kind="show" id="RoE-bV-8lw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="odx-2C-2Vk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -267,7 +296,11 @@
                                     <segue destination="QVt-17-Jv5" kind="show" id="kna-CF-QK1"/>
                                 </connections>
                             </barButtonItem>
-                            <barButtonItem image="icon_refresh" id="nkL-wD-VLJ"/>
+                            <barButtonItem image="icon_refresh" id="nkL-wD-VLJ">
+                                <connections>
+                                    <action selector="refreshUserData:" destination="qJs-ok-EW2" id="0f4-Gr-InU"/>
+                                </connections>
+                            </barButtonItem>
                         </rightBarButtonItems>
                     </navigationItem>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics"/>

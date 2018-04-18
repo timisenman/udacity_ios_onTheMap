@@ -25,20 +25,32 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
     
     let locationPlaceholderText = "Place of Study"
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//        self.locationTextField.text = locationPlaceholderText
+//        self.websiteTextField.text = "Web Address"
+//        self.locationTextField.delegate = textField
+//        self.websiteTextField.delegate = textField
+//        OTMClient.sharedInstance().getLoggedInStudentData()
+//    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         self.locationTextField.text = locationPlaceholderText
         self.websiteTextField.text = "Web Address"
-        
         self.locationTextField.delegate = textField
         self.websiteTextField.delegate = textField
-
+        
+        
     }
 
-    //Segue to ConfirmLocation View
     @IBAction func confirmDetails(_ sender: Any) {
         self.getAddressFromString()
+        print("User info after confirming details: \n\(loggedInUser)")
+    }
+    
+    @IBAction func exitSetLocationAction(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -49,11 +61,6 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
             confirmDetails.newLat = selectedLat
             confirmDetails.newLong = selectedLong
         }
-    }
-    
-    
-    @IBAction func exitSetLocationAction(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
     }
     
     func getAddressFromString() {

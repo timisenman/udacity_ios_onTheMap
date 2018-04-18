@@ -22,8 +22,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     var newWebsite: String?
     var newLong: Double?
     var newLat: Double?
-    let tempLat = 35.689506
-    let tempLong = 139.6917
     
     override func viewWillAppear(_ animated: Bool) {
         if let lat = newLat, let long = newLong {
@@ -32,23 +30,21 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         }
     }
     
-    //Pass in Student information from somewhere. After Login? During segue from Map or TableView? 
-    
     func configureMap(latitude: Double, longitude: Double) {
         let location = CLLocationCoordinate2DMake(latitude, longitude)
         let mapSpan = MKCoordinateSpanMake(5.0, 5.0)
         let mapRegion = MKCoordinateRegionMake(location, mapSpan)
         self.mapView.setRegion(mapRegion, animated: true)
-        
     }
     
     @IBAction func confirmLocationAction(_ sender: Any) {
-        var request = URLRequest(url: URL(string: "https://parse.udacity.com/parse/classes/StudentLocation")!)
+        var request = URLRequest(url: URL(string: Constants.UdacityConstants.PostStudentData)!)
         request.httpMethod = "POST"
-        request.addValue("QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr", forHTTPHeaderField: "X-Parse-Application-Id")
-        request.addValue("QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY", forHTTPHeaderField: "X-Parse-REST-API-Key")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.httpBody = "{\"uniqueKey\": \"1234\", \"firstName\": \"Tim\", \"lastName\": \"Isenman\",\"mapString\": \"\(newLocation!)\", \"mediaURL\": \"\(newWebsite!)\",\"latitude\": \(newLat!), \"longitude\": \(newLong!)}".data(using: .utf8)
+        request.addValue(Constants.UdacityConstants.UdacityApplicationID, forHTTPHeaderField: Constants.UdacityConstants.UdacityAppIDHeader)
+        request.addValue(Constants.UdacityConstants.UdacityAPIKey, forHTTPHeaderField: Constants.UdacityConstants.UdacityAPIKeyHeader)
+        request.addValue(Constants.UdacityConstants.HeaderJSON, forHTTPHeaderField: Constants.UdacityConstants.HeaderContent)
+        request.httpBody = "{\"uniqueKey\": \"\(loggedInUser["uniqueKey"]!)\", \"firstName\": \"\(loggedInUser["firstName"]!)\", \"lastName\": \"\(loggedInUser["lastName"]!)\",\"mapString\": \"\(newLocation!)\", \"mediaURL\": \"\(newWebsite!)\",\"latitude\": \(newLat!), \"longitude\": \(newLong!)}".data(using: .utf8)
+        
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
             if error != nil { // Handle error…
