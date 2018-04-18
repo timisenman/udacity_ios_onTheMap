@@ -47,9 +47,7 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
     
     @IBAction func confirmDetails(_ sender: Any) {
         if websiteTextField.text?.contains("https://") == false {
-            let alert = UIAlertController(title: "Oops!", message: "You need 'https://' in your address.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-            self.present(alert, animated: true, completion: nil)
+            self.presentWarningWith(title: "Oops!", message: "You need 'https://' in your address.")
         } else {
             configureActivityIndicator()
             self.getAddressFromString()
@@ -58,6 +56,12 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
     
     @IBAction func exitSetLocationAction(_ sender: Any) {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    func presentWarningWith(title: String, message: String) {
+        let alert = UIAlertController(title: "Oops!", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -74,7 +78,7 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
         if locationTextField.text != locationPlaceholderText {
             geocoder.geocodeAddressString(locationTextField.text!) { (placemark, error) in
                 guard (error == nil) else {
-                    print("You've encountered an error getting the string: \(error!)")
+                    self.presentWarningWith(title: "Oops", message: "You've encountered an error getting the string: \(error!)")
                     return
                 }
                 
@@ -95,7 +99,7 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
                         self.activityIndicator.stopAnimating()
                     }
                 } else {
-                    print("Coordinates could not be set.")
+                    self.presentWarningWith(title: "Oops", message: "Your coordinates could not be set. Try again.")
                 }
             }
         }

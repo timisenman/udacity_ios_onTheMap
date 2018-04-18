@@ -47,17 +47,18 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
-            if error != nil { // Handle error…
+            if error != nil {
                 return
+            } else {
+                self.presentWarningWith(title: "Oops.", message: "You've encountered an error: \(error!)")
             }
-            print(String(data: data!, encoding: .utf8)!)
             
             if (error == nil) {
                 performUIUpdatesOnMain {
                     self.dismiss(animated: true, completion: nil)
                 }
             } else {
-                print(error!)
+                self.presentWarningWith(title: "Oops", message: "There was a problem posting your location. Try again.")
             }
         }
         task.resume()
@@ -90,4 +91,11 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         
         return pinView
     }
+    
+    func presentWarningWith(title: String, message: String) {
+        let alert = UIAlertController(title: "Oops!", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
+    
 }
