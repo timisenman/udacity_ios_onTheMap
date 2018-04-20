@@ -8,14 +8,6 @@
 
 import Foundation
 
-//Parse Scheme: https://parse.udacity.com/parse/classes
-//Parse Application ID: QrX47CA9cyuGewLdsL7o5Eb8iug6Em8ye0dnAbIr
-//REST API Key: QuWThTdiRmTux3YaDseUSEpUKo7aBYM737yKd4gY
-
-//Udacity Scheme: https://www.udacity.com/api/session
-
-//Facebook API ID "365362206864879"
-//You will need to use the Facebook URL Scheme Suffix "onthemap"
 struct Constants {
     
     struct UdacityConstants {
@@ -29,7 +21,7 @@ struct Constants {
         static let HeaderJSON = "application/json"
         static let HeaderAccept = "Accept"
         static let HeaderContent = "Content-Type"
-        static let GetStudentData = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100" 
+        static let GetStudentData = "https://parse.udacity.com/parse/classes/StudentLocation?limit=100&order=-updatedAt" 
         static let PostStudentData =  "https://parse.udacity.com/parse/classes/StudentLocation"
         static let GetLoggedInData = "https://www.udacity.com/api/users/"
     }

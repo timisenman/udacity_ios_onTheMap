@@ -17,12 +17,6 @@ class OTMClient: NSObject {
         super.init()
     }
     
-    func displayError(onViewController view: UIViewController, title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-        view.present(alert, animated: true, completion: nil)
-    }
-    
     func loginWith(userName: String, password: String, completionHandlerForLogin: @escaping (_ success: Bool, _ error: String?) -> Void) {
         let url = URL(string: Constants.UdacityConstants.UdacitySession)
         var request = URLRequest(url: url!)
@@ -41,6 +35,11 @@ class OTMClient: NSObject {
             
             guard let data = data else {
                 completionHandlerForLogin(false, "No response during login.")
+                return
+            }
+            
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                completionHandlerForLogin(false, "Your request returned a status code other than 2xx!")
                 return
             }
             
@@ -70,9 +69,13 @@ class OTMClient: NSObject {
             loggedInUser["id"] = sessionId
             loggedInUser["uniqueKey"] = String(describing: accountData["key"]!)
             if let uniqueKey = loggedInUser["uniqueKey"] {
-                self.taskForLoggedInStudentData(ofStudent: uniqueKey) { (firstName, lastName) in
-                    loggedInUser["firstName"] = firstName
-                    loggedInUser["lastName"] = lastName
+                self.taskForLoggedInStudentData(ofStudent: uniqueKey) { (success, errorString, firstName, lastName) in
+                    if success {
+                        loggedInUser["firstName"] = firstName
+                        loggedInUser["lastName"] = lastName
+                    } else {
+                        completionHandlerForLogin(false, "Your information wasn't accessible.")
+                    }
                 }
             }
             completionHandlerForLogin(true, nil)
@@ -80,14 +83,20 @@ class OTMClient: NSObject {
         task.resume()
     }
     
-    func taskForLoggedInStudentData(ofStudent: String, completionHandlerForLoggedIn: @escaping(_ firstName: String, _ lastName: String) -> Void) {
+    func taskForLoggedInStudentData(ofStudent: String, completionHandlerForLoggedIn: @escaping(_ success: Bool, _ errorString: String?, _ firstName: String?, _ lastName: String?) -> Void) {
         let url = URL(string: Constants.UdacityConstants.GetLoggedInData + ofStudent)
         var request = URLRequest(url: url!)
         request.addValue(Constants.UdacityConstants.HeaderJSON, forHTTPHeaderField: Constants.UdacityConstants.HeaderAccept)
         request.addValue(Constants.UdacityConstants.HeaderJSON, forHTTPHeaderField: Constants.UdacityConstants.HeaderContent)
 
         let task = session.dataTask(with: request) { data, response, error in
-            if error != nil {
+            guard (error == nil) else {
+                completionHandlerForLoggedIn(false, "There was an error downloading student data! \nError: \(error!)", nil, nil)
+                return
+            }
+            
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                completionHandlerForLoggedIn(false, "Sorry: You couldn't connect to Udacity. Check your connection.", nil, nil)
                 return
             }
             
@@ -100,20 +109,31 @@ class OTMClient: NSObject {
             }
             
             guard let userData = results["user"] else {
-                print("Cannot retrieve logged in user data.")
+                completionHandlerForLoggedIn(false, "Your information isn't available for Login.", nil, nil)
                 return
             }
             
             if let firstName = userData["first_name"], let lastName = userData["last_name"] {
-                completionHandlerForLoggedIn(firstName as! String, lastName as! String)
+                completionHandlerForLoggedIn(true, nil, firstName as? String, lastName as? String)
             }
         }
         task.resume()
     }
     
-    func taskForGet(request: URLRequest, completionHanlderForGet: @escaping(_ studentData: [Student]) -> Void) {
+    func taskForGet(_ completionHanlderForGet: @escaping(_ success: Bool, _ errorString: String?) -> Void) {
+        var request = URLRequest(url: URL(string: Constants.UdacityConstants.GetStudentData)!)
+        request.httpMethod = "GET"
+        request.addValue(Constants.UdacityConstants.UdacityApplicationID, forHTTPHeaderField: Constants.UdacityConstants.UdacityAppIDHeader)
+        request.addValue(Constants.UdacityConstants.UdacityAPIKey, forHTTPHeaderField: Constants.UdacityConstants.UdacityAPIKeyHeader)
+        
         let task = session.dataTask(with: request) { data, response, error in
-            if error != nil {
+            guard (error == nil) else {
+                completionHanlderForGet(false, "There was an error downloading student data! \nError: \(error!)")
+                return
+            }
+            
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                completionHanlderForGet(false, "Sorry: You couldn't connect to Udacity.")
                 return
             }
             
@@ -123,35 +143,40 @@ class OTMClient: NSObject {
             }
             
             guard let studentDictionary = results["results"] as? [[String:AnyObject]] else {
-                print("Not dictionary.")
+                completionHanlderForGet(false, "It appears no student information is available.")
                 return
             }
             
-            let students = Student.studentsFromRequest(studentDictionary)
-            completionHanlderForGet(students)
+            studentArray = Student.studentsFromRequest(studentDictionary)
+            completionHanlderForGet(true, nil)
         }
         task.resume()
     }
     
-    func logoutAndDeleteSession(completionHandlerForDELETE: @escaping (_ sessionID: [String:AnyObject]) -> Void) {
+    func logoutAndDeleteSession(completionHandlerForDELETE: @escaping (_ success: Bool, _ errorString: String?, _ sessionID: [String:AnyObject]?) -> Void) {
+        
         var request = URLRequest(url: URL(string: Constants.UdacityConstants.UdacitySession)!)
         request.httpMethod = "DELETE"
         var xsrfCookie: HTTPCookie? = nil
         let sharedCookieStorage = HTTPCookieStorage.shared
+        
         for cookie in sharedCookieStorage.cookies! {
             if cookie.name == "XSRF-TOKEN" { xsrfCookie = cookie }
         }
+        
         if let xsrfCookie = xsrfCookie {
             request.setValue(xsrfCookie.value, forHTTPHeaderField: "X-XSRF-TOKEN")
         }
+        
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
-            if error != nil {
+            guard (error == nil) else {
+                completionHandlerForDELETE(false, "There was an error logging out: \(error!)", nil)
                 return
             }
             
-            guard (error == nil) else {
-                print("There was an error logging out.")
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                completionHandlerForDELETE(false,"Your logout request returned a status code other than 2xx!", nil)
                 return
             }
             
@@ -164,11 +189,10 @@ class OTMClient: NSObject {
             }
             
             guard let sessionData = parsedData["session"] as? [String:AnyObject] else {
-                print("Could not parse session data from logout request.")
+                completionHandlerForDELETE(false,"Could not parse session data from logout request.", nil)
                 return
             }
-            
-            completionHandlerForDELETE(sessionData)
+            completionHandlerForDELETE(true, nil, sessionData)
         }
         task.resume()
     }

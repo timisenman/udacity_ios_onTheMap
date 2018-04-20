@@ -12,8 +12,7 @@ class CellTableViewController: UITableViewController {
     
     @IBOutlet weak var logoutButton: UIBarButtonItem!
     @IBOutlet weak var addLocationButton: UIBarButtonItem!
-    
-    var students: [Student] = [Student]()
+    @IBOutlet weak var refreshButton: UIBarButtonItem!
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
@@ -21,30 +20,39 @@ class CellTableViewController: UITableViewController {
     }
     
     @IBAction func logoutButtonAction(_ sender: Any) {
-        OTMClient.sharedInstance().logoutAndDeleteSession { (sessionData) in
-            logoutData = sessionData
-            print("\nLogging Out with: \(logoutData)\n")
+        OTMClient.sharedInstance().logoutAndDeleteSession { (success, errorString, sessionData) in
+            logoutData = sessionData!
         }
         self.dismiss(animated: true, completion: nil)
     }
     
+    @IBAction func refreshDataAction(_ sender: Any) {
+        downloadUserData()
+    }
+    
     func downloadUserData() {
-        var request = URLRequest(url: URL(string: Constants.UdacityConstants.GetStudentData)!)
-        request.httpMethod = "GET"
-        request.addValue(Constants.UdacityConstants.UdacityApplicationID, forHTTPHeaderField: Constants.UdacityConstants.UdacityAppIDHeader)
-        request.addValue(Constants.UdacityConstants.UdacityAPIKey, forHTTPHeaderField: Constants.UdacityConstants.UdacityAPIKeyHeader)
-        
-        OTMClient.sharedInstance().taskForGet(request: request) { (studentData) in
-            self.students = studentData
+        OTMClient.sharedInstance().taskForGet() { (success, errorString) in
+            if success {
                 performUIUpdatesOnMain {
                     self.tableView.reloadData()
+                }
+            } else {
+                self.displayError(withString: errorString!)
             }
+        }
+    }
+    
+    func displayError(withString: String) {
+        performUIUpdatesOnMain {
+            let alert = UIAlertController(title: "Oops!", message: withString, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Try again", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "studentsCells"
-        let student = students[(indexPath as NSIndexPath).row]
+        let student = studentArray![(indexPath as NSIndexPath).row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! CustomCellViewControllerTableViewCell
         
         cell.studentName.text = "\(student.firstName) \(student.lastName)"
@@ -54,16 +62,25 @@ class CellTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return students.count
+        return studentArray!.count
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let student = students[(indexPath as NSIndexPath).row]
-        UIApplication.shared.open(URL(string: "\(student.mediaURL)")!, options: [:]) { (success) in
-            if success {
-                print("URL opened successfully")
+        let cellReuseIdentifier = "studentsCells"
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! CustomCellViewControllerTableViewCell
+        let student = studentArray![(indexPath as NSIndexPath).row]
+        let app = UIApplication.shared
+        if let toOpen = cell.studentSite?.text {
+            if toOpen.contains("https://") {
+                app.open(URL(string: toOpen)!, options: [:]) { (success) in
+                    if success {
+                        print("URL opened successfully")
+                    } else {
+                        self.displayError(withString: "This isn't a valid URL.")
+                    }
+                }
             } else {
-                print("URL not opened.")
+                self.displayError(withString: "This isn't a valid URL.")
             }
         }
     }

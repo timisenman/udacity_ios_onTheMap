@@ -20,7 +20,7 @@ class LoginViewController: UIViewController {
             if success {
                 self.completeLogin()
             } else {
-                self.displayError()
+                self.displayError(withString: errorString!)
             }
         }
     }
@@ -33,9 +33,9 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func displayError() {
+    func displayError(withString: String) {
         performUIUpdatesOnMain {
-            let alert = UIAlertController(title: "Oops!", message: "Your account or password were incorrect.", preferredStyle: .alert)
+            let alert = UIAlertController(title: "Oops!", message: withString, preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Try again", style: .default, handler: nil))
             self.present(alert, animated: true, completion: nil)
         }

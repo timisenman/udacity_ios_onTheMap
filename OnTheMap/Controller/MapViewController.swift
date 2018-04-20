@@ -17,7 +17,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var logoutButton: UIBarButtonItem!
     @IBOutlet weak var refreshDataButton: UIBarButtonItem!
     
-    var students: [Student]? = [Student]()
+    
     var annotations = [MKPointAnnotation]()
     
     override func viewWillAppear(_ animated: Bool) {
@@ -26,15 +26,29 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         downloadUserData()
     }
     
+    @IBAction func refreshDataAction(_ sender: Any) {
+        downloadUserData()
+    }
+    
+    @IBAction func logoutButtonAction(_ sender: Any) {
+        OTMClient.sharedInstance().logoutAndDeleteSession { (success, errorString, sessionData) in
+            if success {
+                logoutData = sessionData!
+            } else {
+                self.displayError(withString: errorString!)
+            }
+        }
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     func downloadUserData() {
-        var request = URLRequest(url: URL(string: Constants.UdacityConstants.GetStudentData)!)
-        request.httpMethod = "GET"
-        request.addValue(Constants.UdacityConstants.UdacityApplicationID, forHTTPHeaderField: Constants.UdacityConstants.UdacityAppIDHeader)
-        request.addValue(Constants.UdacityConstants.UdacityAPIKey, forHTTPHeaderField: Constants.UdacityConstants.UdacityAPIKeyHeader)
-        
-        OTMClient.sharedInstance().taskForGet(request: request) { (studentData) in
-            performUIUpdatesOnMain {
-                self.setMapAnnotations(students: studentData)
+        OTMClient.sharedInstance().taskForGet() { (success, errorString) in
+            if success {
+                performUIUpdatesOnMain {
+                    self.setMapAnnotations(students: studentArray!)
+                }
+            } else {
+                self.displayError(withString: errorString!)
             }
         }
     }
@@ -62,14 +76,14 @@ class MapViewController: UIViewController, MKMapViewDelegate {
         self.mapView.setRegion(mapRegion, animated: true)
     }
     
-    @IBAction func logoutButtonAction(_ sender: Any) {
-        OTMClient.sharedInstance().logoutAndDeleteSession { (sessionData) in
-            logoutData = sessionData
-            print("\nLogging Out with: \(logoutData)\n")
+    func displayError(withString: String) {
+        performUIUpdatesOnMain {
+            let alert = UIAlertController(title: "Oops!", message: withString, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Try again", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
         }
-        self.dismiss(animated: true, completion: nil)
     }
-
+    
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         let reuseId = "pin"
         var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
@@ -87,13 +101,26 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func mapView(_ mapView: MKMapView, annotationView view: MKAnnotationView, calloutAccessoryControlTapped control: UIControl) {
+        let reuseId = "pin"
+        var pinView = mapView.dequeueReusableAnnotationView(withIdentifier: reuseId) as? MKPinAnnotationView
         
         if control == view.rightCalloutAccessoryView {
             let app = UIApplication.shared
-            if let toOpen = view.annotation?.subtitle! {
+            
+            guard let toOpen = view.annotation?.subtitle! else {
+                self.displayError(withString: "This isn't a valid URL.")
+                return
+            }
+            if toOpen.contains("https://") == true {
                 app.open(URL(string: toOpen)!, options: [:]) { (success) in
-                    return
+                    if success {
+                        print("URL opened successfully")
+                    } else {
+                        self.displayError(withString: "This isn't a valid URL.")
+                    }
                 }
+            } else {
+                self.displayError(withString: "This isn't a valid URL.")
             }
         }
     }

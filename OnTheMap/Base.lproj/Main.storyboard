@@ -71,7 +71,7 @@
                             </barButtonItem>
                             <barButtonItem image="icon_refresh" id="Fez-0o-lFb">
                                 <connections>
-                                    <action selector="refreshUserData:" destination="Gnz-rx-7n5" id="sep-FQ-Fbd"/>
+                                    <action selector="refreshDataAction:" destination="Gnz-rx-7n5" id="JKT-Ot-6fD"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -298,7 +298,7 @@
                             </barButtonItem>
                             <barButtonItem image="icon_refresh" id="nkL-wD-VLJ">
                                 <connections>
-                                    <action selector="refreshUserData:" destination="qJs-ok-EW2" id="0f4-Gr-InU"/>
+                                    <action selector="refreshDataAction:" destination="qJs-ok-EW2" id="7Ig-SY-r7g"/>
                                 </connections>
                             </barButtonItem>
                         </rightBarButtonItems>
@@ -307,6 +307,7 @@
                     <connections>
                         <outlet property="addLocationButton" destination="sbE-9g-x82" id="c9I-Ft-sdc"/>
                         <outlet property="logoutButton" destination="7mf-S5-Bnd" id="ix2-l2-rf0"/>
+                        <outlet property="refreshButton" destination="nkL-wD-VLJ" id="myj-qN-M2y"/>
                         <outlet property="tableView" destination="hFg-Kq-ZHi" id="2V5-yp-wl2"/>
                     </connections>
                 </tableViewController>

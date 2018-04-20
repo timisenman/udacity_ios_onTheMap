@@ -36,6 +36,19 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
         self.mapIcon.isHidden = false
     }
     
+    @IBAction func confirmDetails(_ sender: Any) {
+        if websiteTextField.text?.contains("https://") == true {
+            configureActivityIndicator()
+            self.getAddressFromString()
+        } else {
+            self.displayError(message: "You need 'https://' in your address.")
+        }
+    }
+    
+    @IBAction func exitSetLocationAction(_ sender: Any) {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
     func configureActivityIndicator() {
         self.mapIcon.isHidden = true
         self.activityIndicator.center = self.mapIcon.center
@@ -45,23 +58,17 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
         self.activityIndicator.startAnimating()
     }
     
-    @IBAction func confirmDetails(_ sender: Any) {
-        if websiteTextField.text?.contains("https://") == false {
-            self.presentWarningWith(title: "Oops!", message: "You need 'https://' in your address.")
-        } else {
-            configureActivityIndicator()
-            self.getAddressFromString()
-        }
-    }
-    
-    @IBAction func exitSetLocationAction(_ sender: Any) {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    func presentWarningWith(title: String, message: String) {
+    func displayError(message: String) {
         let alert = UIAlertController(title: "Oops!", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: { action in
+            self.stopActivityIndicator()
+        }))
         self.present(alert, animated: true, completion: nil)
+    }
+    
+    func stopActivityIndicator() {
+        self.activityIndicator.stopAnimating()
+        self.mapIcon.isHidden = false
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -78,12 +85,12 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
         if locationTextField.text != locationPlaceholderText {
             geocoder.geocodeAddressString(locationTextField.text!) { (placemark, error) in
                 guard (error == nil) else {
-                    self.presentWarningWith(title: "Oops", message: "You've encountered an error getting the string: \(error!)")
+                    self.displayError(message: "Your location could not be found.")
                     return
                 }
                 
                 guard let location = placemark else {
-                    print("No placemark.")
+                    self.displayError(message: "There was a problem placing your pin on the map.")
                     return
                 }
                 
@@ -99,7 +106,8 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
                         self.activityIndicator.stopAnimating()
                     }
                 } else {
-                    self.presentWarningWith(title: "Oops", message: "Your coordinates could not be set. Try again.")
+                    self.displayError(message: "There was a problem placing your pin on the map.")
+                    self.activityIndicator.stopAnimating()
                 }
             }
         }

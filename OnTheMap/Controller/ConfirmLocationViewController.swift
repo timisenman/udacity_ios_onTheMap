@@ -47,12 +47,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         
         let session = URLSession.shared
         let task = session.dataTask(with: request) { data, response, error in
-            if error != nil {
-                return
-            } else {
-                self.presentWarningWith(title: "Oops.", message: "You've encountered an error: \(error!)")
-            }
-            
             if (error == nil) {
                 performUIUpdatesOnMain {
                     self.dismiss(animated: true, completion: nil)
