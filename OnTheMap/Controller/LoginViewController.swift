@@ -8,12 +8,26 @@
 
 import UIKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var accountTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var signUpButton: UIButton!
     @IBOutlet weak var signUpText: UITextView!
+    
+    let textFieldDelegate = TextFieldDelegate()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        accountTextField.delegate = textFieldDelegate
+        passwordTextField.delegate = textFieldDelegate
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        updateText(accountTextField)
+        updateText(passwordTextField)
+    }
     
     @IBAction func submitLoginButton(_ sender: Any) {
         OTMClient.sharedInstance().loginWith(userName: accountTextField.text!, password: passwordTextField.text!) { (success, errorString) in
@@ -22,6 +36,13 @@ class LoginViewController: UIViewController {
             } else {
                 self.displayError(withString: errorString!)
             }
+        }
+    }
+    
+    @IBAction func signUpAction(_ sender: Any) {
+        let app = UIApplication.shared
+        app.open(URL(string: Constants.UdacityConstants.SignUpFormURL)!, options: [:]) { (success) in
+            return
         }
     }
     
@@ -41,10 +62,10 @@ class LoginViewController: UIViewController {
         }
     }
     
-    @IBAction func signUpAction(_ sender: Any) {
-        let app = UIApplication.shared
-        app.open(URL(string: Constants.UdacityConstants.SignUpFormURL)!, options: [:]) { (success) in
-            return
+    func updateText(_ textField: UITextField) {
+        if textField.text != "" {
+            textField.text = ""
         }
     }
+    
 }

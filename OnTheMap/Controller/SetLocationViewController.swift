@@ -18,22 +18,18 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
     @IBOutlet weak var exitSetLocationButton: UIBarButtonItem!
     @IBOutlet weak var mapIcon: UIImageView!
     
-    let textField = TextFieldDelegate()
+    let textFieldDelegate = TextFieldDelegate()
     var activityIndicator = UIActivityIndicatorView()
     let geocoder = CLGeocoder()
     var placemarks: [CLPlacemark?] = [CLPlacemark]()
     var selectedLat: Double?
     var selectedLong: Double?
     
-    //Usable when delegate is working
-    let locationPlaceholderText = "Place of Study"
-    let websitePlaceholderText = "Website"
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        self.locationTextField.delegate = textField
-        self.websiteTextField.delegate = textField
-        self.mapIcon.isHidden = false
+        locationTextField.delegate = textFieldDelegate
+        websiteTextField.delegate = self
+        mapIcon.isHidden = false
     }
     
     @IBAction func confirmDetails(_ sender: Any) {
@@ -81,9 +77,22 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
         }
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        updateText(textField)
+    }
+    
+    func updateText(_ textField: UITextField) {
+        if textField == websiteTextField {
+            if websiteTextField.text == "" {
+                websiteTextField.text = "https://"
+            }
+        }
+    }
+
+    
     func getAddressFromString() {
-        if locationTextField.text != locationPlaceholderText {
-            geocoder.geocodeAddressString(locationTextField.text!) { (placemark, error) in
+        if let usersLocation = locationTextField.text {
+            geocoder.geocodeAddressString(usersLocation) { (placemark, error) in
                 guard (error == nil) else {
                     self.displayError(message: "Your location could not be found.")
                     return
