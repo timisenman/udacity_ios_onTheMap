@@ -54,6 +54,19 @@ struct Constants {
         static let updatedAtKey = "updatedAt"  
     }
     
+    struct LoggedInUser {
+        static let uniqueKey = "uniqueKey"
+        static let sessionId = "sessionId"
+        static let firstName = "firstName"
+        static let lastName = "lastName"
+        static let location = "location"
+        static let mediaURL = "mediaURL"
+        static let latitude = "latitude"
+        static let longitude = "longitude"
+        static let createdAt = "createdAt"
+        static let objectId = "objectId"
+    }
+    
     struct Segues {
         static let confirmLocation = "ConfirmLocationSegue"
     }

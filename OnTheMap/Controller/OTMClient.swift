@@ -69,7 +69,7 @@ class OTMClient: NSObject {
             loggedInUser["id"] = sessionId
             loggedInUser["uniqueKey"] = String(describing: accountData["key"]!)
             if let uniqueKey = loggedInUser["uniqueKey"] {
-                self.taskForLoggedInStudentData(ofStudent: uniqueKey) { (success, errorString, firstName, lastName) in
+                self.taskForLoggedInStudentData(ofStudent: uniqueKey as! String) { (success, errorString, firstName, lastName) in
                     if success {
                         loggedInUser["firstName"] = firstName
                         loggedInUser["lastName"] = lastName
@@ -193,6 +193,47 @@ class OTMClient: NSObject {
                 return
             }
             completionHandlerForDELETE(true, nil, sessionData)
+        }
+        task.resume()
+    }
+    
+    func postStudentLocation(_ completionHanlderForPOST: @escaping(_ success: Bool, _ errorString: String?) -> Void) {
+        var request = URLRequest(url: URL(string: Constants.UdacityConstants.PostStudentData)!)
+        request.httpMethod = "POST"
+        request.addValue(Constants.UdacityConstants.UdacityApplicationID, forHTTPHeaderField: Constants.UdacityConstants.UdacityAppIDHeader)
+        request.addValue(Constants.UdacityConstants.UdacityAPIKey, forHTTPHeaderField: Constants.UdacityConstants.UdacityAPIKeyHeader)
+        request.addValue(Constants.UdacityConstants.HeaderJSON, forHTTPHeaderField: Constants.UdacityConstants.HeaderContent)
+        request.httpBody = "{\"uniqueKey\": \"\(loggedInUser[Constants.LoggedInUser.uniqueKey]!)\", \"firstName\": \"\(loggedInUser[Constants.LoggedInUser.firstName]!)\", \"lastName\": \"\(loggedInUser[Constants.LoggedInUser.lastName]!)\",\"mapString\": \"\(loggedInUser[Constants.LoggedInUser.location]!)\", \"mediaURL\": \"\(loggedInUser[Constants.LoggedInUser.mediaURL]!)\",\"latitude\": \(loggedInUser[Constants.LoggedInUser.latitude]!), \"longitude\": \(loggedInUser[Constants.LoggedInUser.longitude]!)}".data(using: .utf8)
+        
+        let task = session.dataTask(with: request) { data, response, error in
+            guard (error == nil) else {
+                completionHanlderForPOST(false, "There was an error posting your information.")
+                return
+            }
+            
+            guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
+                completionHanlderForPOST(false, "Sorry: You couldn't connect to Udacity to make the post.")
+                return
+            }
+            
+            var results: [String:AnyObject]!
+            do {
+                results = try? JSONSerialization.jsonObject(with: data!, options: .allowFragments) as! [String:AnyObject]
+            }
+            
+            guard let objectId = results[Constants.LoggedInUser.objectId] as? String else {
+                completionHanlderForPOST(false, "We cannot confirm your information was saved. Try again.")
+                return
+            }
+            
+            guard let createdAt = results[Constants.LoggedInUser.createdAt] as? String else {
+                completionHanlderForPOST(false, "We cannot confirm your information was saved. Try again.")
+                return
+            }
+            
+            loggedInUser[Constants.LoggedInUser.objectId] = objectId
+            loggedInUser[Constants.LoggedInUser.createdAt] = createdAt
+            completionHanlderForPOST(true, nil)
         }
         task.resume()
     }

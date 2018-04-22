@@ -68,9 +68,9 @@ class CellTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cellReuseIdentifier = "studentsCells"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! CustomCellViewControllerTableViewCell
-        let student = studentArray![(indexPath as NSIndexPath).row]
+        let student = studentArray?[(indexPath as NSIndexPath).row]
         let app = UIApplication.shared
-        if let toOpen = cell.studentSite?.text {
+        if let toOpen = student?.mediaURL {
             if toOpen.contains("https://") {
                 app.open(URL(string: toOpen)!, options: [:]) { (success) in
                     if success {

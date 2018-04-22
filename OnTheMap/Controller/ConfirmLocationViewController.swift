@@ -15,7 +15,6 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var confirmLocationButton: UIButton!
     
-    var student: [Student?] = [Student]()
     var annotations = [MKPointAnnotation]()
     
     var newLocation: String?
@@ -38,24 +37,16 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func confirmLocationAction(_ sender: Any) {
-        var request = URLRequest(url: URL(string: Constants.UdacityConstants.PostStudentData)!)
-        request.httpMethod = "POST"
-        request.addValue(Constants.UdacityConstants.UdacityApplicationID, forHTTPHeaderField: Constants.UdacityConstants.UdacityAppIDHeader)
-        request.addValue(Constants.UdacityConstants.UdacityAPIKey, forHTTPHeaderField: Constants.UdacityConstants.UdacityAPIKeyHeader)
-        request.addValue(Constants.UdacityConstants.HeaderJSON, forHTTPHeaderField: Constants.UdacityConstants.HeaderContent)
-        request.httpBody = "{\"uniqueKey\": \"\(loggedInUser["uniqueKey"]!)\", \"firstName\": \"\(loggedInUser["firstName"]!)\", \"lastName\": \"\(loggedInUser["lastName"]!)\",\"mapString\": \"\(newLocation!)\", \"mediaURL\": \"\(newWebsite!)\",\"latitude\": \(newLat!), \"longitude\": \(newLong!)}".data(using: .utf8)
-        
-        let session = URLSession.shared
-        let task = session.dataTask(with: request) { data, response, error in
-            if (error == nil) {
+        saveNewLocations()
+        OTMClient.sharedInstance().postStudentLocation() { success, errorString in
+            if success {
                 performUIUpdatesOnMain {
                     self.dismiss(animated: true, completion: nil)
                 }
             } else {
-                self.presentWarningWith(title: "Oops", message: "There was a problem posting your location. Try again.")
+                self.displayError(title: "Oops", message: "There was a problem posting your location. Try again.")
             }
         }
-        task.resume()
     }
     
     func setMapAnnotations(latitude: Double, longitude: Double) {
@@ -68,6 +59,13 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         
         self.annotations.append(annotation)
         self.mapView.addAnnotations(annotations)
+    }
+    
+    func saveNewLocations() {
+        loggedInUser[Constants.LoggedInUser.latitude] = newLat
+        loggedInUser[Constants.LoggedInUser.longitude] = newLong
+        loggedInUser[Constants.LoggedInUser.mediaURL] = newWebsite
+        loggedInUser[Constants.LoggedInUser.location] = newLocation
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -86,7 +84,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         return pinView
     }
     
-    func presentWarningWith(title: String, message: String) {
+    func displayError(title: String, message: String) {
         let alert = UIAlertController(title: "Oops!", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
         self.present(alert, animated: true, completion: nil)

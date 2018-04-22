@@ -11,9 +11,22 @@ import MapKit
 
 var studentArray: [Student]? = [Student]()
 
-var annotations = [MKPointAnnotation]()
+var studentAnnotations = [MKPointAnnotation]()
 
-var loggedInUser = ["firstName":"","lastName":"", "id":"", "uniqueKey":""]
+var loggedInAnnotations = [MKPointAnnotation]()
+
+var loggedInUser: [String:Any] = [
+    Constants.LoggedInUser.firstName: "",
+    Constants.LoggedInUser.lastName: "",
+    Constants.LoggedInUser.sessionId: "",
+    Constants.LoggedInUser.objectId: "",
+    Constants.LoggedInUser.uniqueKey: "",
+    Constants.LoggedInUser.mediaURL: "",
+    Constants.LoggedInUser.location: "",
+    Constants.LoggedInUser.latitude: 0.0,
+    Constants.LoggedInUser.longitude: 0.0,
+    Constants.LoggedInUser.createdAt: ""
+]
 
 var logoutData = [String:AnyObject]()
 

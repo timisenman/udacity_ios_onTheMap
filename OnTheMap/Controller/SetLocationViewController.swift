@@ -88,6 +88,11 @@ class SetLocationViewController: UIViewController, UITextFieldDelegate, CLLocati
             }
         }
     }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
 
     
     func getAddressFromString() {
