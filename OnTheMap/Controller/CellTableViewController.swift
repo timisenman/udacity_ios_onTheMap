@@ -21,7 +21,7 @@ class CellTableViewController: UITableViewController {
     
     @IBAction func logoutButtonAction(_ sender: Any) {
         OTMClient.sharedInstance().logoutAndDeleteSession { (success, errorString, sessionData) in
-            logoutData = sessionData!
+            UserArray.shared.logoutData = sessionData!
         }
         self.dismiss(animated: true, completion: nil)
     }
@@ -31,7 +31,7 @@ class CellTableViewController: UITableViewController {
     }
     
     func downloadUserData() {
-        OTMClient.sharedInstance().taskForGet() { (success, errorString) in
+        OTMClient.sharedInstance().taskForGetAllStudents() { (success, errorString) in
             if success {
                 performUIUpdatesOnMain {
                     self.tableView.reloadData()
@@ -52,7 +52,7 @@ class CellTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cellReuseIdentifier = "studentsCells"
-        let student = studentArray![(indexPath as NSIndexPath).row]
+        let student = StudentArray.shared.studentArray![(indexPath as NSIndexPath).row]
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! CustomCellViewControllerTableViewCell
         
         cell.studentName.text = "\(student.firstName) \(student.lastName)"
@@ -62,13 +62,13 @@ class CellTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return studentArray!.count
+        return StudentArray.shared.studentArray!.count
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cellReuseIdentifier = "studentsCells"
         let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as! CustomCellViewControllerTableViewCell
-        let student = studentArray?[(indexPath as NSIndexPath).row]
+        let student = StudentArray.shared.studentArray?[(indexPath as NSIndexPath).row]
         let app = UIApplication.shared
         if let toOpen = student?.mediaURL {
             if toOpen.contains("https://") {

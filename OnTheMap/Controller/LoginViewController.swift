@@ -41,9 +41,7 @@ class LoginViewController: UIViewController, UITextFieldDelegate {
     
     @IBAction func signUpAction(_ sender: Any) {
         let app = UIApplication.shared
-        app.open(URL(string: Constants.UdacityConstants.SignUpFormURL)!, options: [:]) { (success) in
-            return
-        }
+        app.open(URL(string: Constants.UdacityConstants.SignUpFormURL)!, options: [:])
     }
     
     func completeLogin() {

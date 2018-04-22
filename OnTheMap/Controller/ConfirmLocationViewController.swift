@@ -15,14 +15,13 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var confirmLocationButton: UIButton!
     
-//    var annotations = [MKPointAnnotation]()
-    
     var newLocation: String?
     var newWebsite: String?
     var newLong: Double?
     var newLat: Double?
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
         if let lat = newLat, let long = newLong {
             setMapAnnotations(latitude: lat, longitude: long)
             configureMap(latitude: lat, longitude: long)
@@ -56,18 +55,18 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
-        annotation.title = "\(loggedInUser[Constants.LoggedInUser.firstName]!) \(loggedInUser[Constants.LoggedInUser.lastName]!)"
-        annotation.subtitle = "\(loggedInUser[Constants.LoggedInUser.mediaURL]!)"
+        annotation.title = "\(UserArray.shared.loggedInUser[Constants.LoggedInUser.firstName]!) \(UserArray.shared.loggedInUser[Constants.LoggedInUser.lastName]!)"
+        annotation.subtitle = "\(UserArray.shared.loggedInUser[Constants.LoggedInUser.mediaURL]!)"
         
-        loggedInAnnotations.append(annotation)
-        self.mapView.addAnnotations(loggedInAnnotations)
+        UserArray.shared.loggedInAnnotations.append(annotation)
+        self.mapView.addAnnotations(UserArray.shared.loggedInAnnotations)
     }
     
     func saveUsersInformation() {
-        loggedInUser[Constants.LoggedInUser.latitude] = newLat
-        loggedInUser[Constants.LoggedInUser.longitude] = newLong
-        loggedInUser[Constants.LoggedInUser.mediaURL] = newWebsite
-        loggedInUser[Constants.LoggedInUser.location] = newLocation
+        UserArray.shared.loggedInUser[Constants.LoggedInUser.latitude] = newLat
+        UserArray.shared.loggedInUser[Constants.LoggedInUser.longitude] = newLong
+        UserArray.shared.loggedInUser[Constants.LoggedInUser.mediaURL] = newWebsite
+        UserArray.shared.loggedInUser[Constants.LoggedInUser.location] = newLocation
     }
     
     func displayError(title: String, message: String) {

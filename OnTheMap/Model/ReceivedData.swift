@@ -9,25 +9,29 @@
 import Foundation
 import MapKit
 
-var studentArray: [Student]? = [Student]()
+class StudentArray {
+    static let shared = StudentArray()
+    var studentArray: [Student]? = [Student]()
+    var studentAnnotations = [MKPointAnnotation]()
+}
 
-var studentAnnotations = [MKPointAnnotation]()
-
-var loggedInAnnotations = [MKPointAnnotation]()
-
-var loggedInUser: [String:Any] = [
-    Constants.LoggedInUser.firstName: "",
-    Constants.LoggedInUser.lastName: "",
-    Constants.LoggedInUser.sessionId: "",
-    Constants.LoggedInUser.objectId: "",
-    Constants.LoggedInUser.uniqueKey: "",
-    Constants.LoggedInUser.mediaURL: "",
-    Constants.LoggedInUser.location: "",
-    Constants.LoggedInUser.latitude: 0.0,
-    Constants.LoggedInUser.longitude: 0.0,
-    Constants.LoggedInUser.createdAt: ""
-]
-
-var logoutData = [String:AnyObject]()
-
-
+class UserArray {
+    static let shared = UserArray()
+    
+    var loggedInAnnotations = [MKPointAnnotation]()
+    
+    var loggedInUser: [String:Any] = [
+        Constants.LoggedInUser.firstName: "",
+        Constants.LoggedInUser.lastName: "",
+        Constants.LoggedInUser.sessionId: "",
+        Constants.LoggedInUser.objectId: "",
+        Constants.LoggedInUser.uniqueKey: "",
+        Constants.LoggedInUser.mediaURL: "",
+        Constants.LoggedInUser.location: "",
+        Constants.LoggedInUser.latitude: 0.0,
+        Constants.LoggedInUser.longitude: 0.0,
+        Constants.LoggedInUser.createdAt: ""
+    ]
+    
+    var logoutData = [String:AnyObject]()
+}

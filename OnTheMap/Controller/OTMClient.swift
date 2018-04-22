@@ -29,17 +29,17 @@ class OTMClient: NSObject {
         let task = session.dataTask(with: request) { (data, response, error) in
             
             guard (error == nil) else {
-                completionHandlerForLogin(false, "Encountered error: \(error!)")
+                completionHandlerForLogin(false, "Sorry: There was an error logging you in:\nError:\(error?.localizedDescription ?? "Unexpected error")")
                 return
             }
             
             guard let data = data else {
-                completionHandlerForLogin(false, "No response during login.")
+                completionHandlerForLogin(false, "Sorry: There was no response during login.")
                 return
             }
             
             guard let statusCode = (response as? HTTPURLResponse)?.statusCode, statusCode >= 200 && statusCode <= 299 else {
-                completionHandlerForLogin(false, "Your request returned a status code other than 2xx!")
+                completionHandlerForLogin(false, "We couldn't log you in.\nCheck your name and password.")
                 return
             }
             
@@ -66,13 +66,13 @@ class OTMClient: NSObject {
                 return
             }
             
-            loggedInUser["id"] = sessionId
-            loggedInUser["uniqueKey"] = String(describing: accountData["key"]!)
-            if let uniqueKey = loggedInUser["uniqueKey"] {
+            UserArray.shared.loggedInUser["id"] = sessionId
+            UserArray.shared.loggedInUser["uniqueKey"] = String(describing: accountData["key"]!)
+            if let uniqueKey = UserArray.shared.loggedInUser["uniqueKey"] {
                 self.taskForLoggedInStudentData(ofStudent: uniqueKey as! String) { (success, errorString, firstName, lastName) in
                     if success {
-                        loggedInUser["firstName"] = firstName
-                        loggedInUser["lastName"] = lastName
+                        UserArray.shared.loggedInUser["firstName"] = firstName
+                        UserArray.shared.loggedInUser["lastName"] = lastName
                     } else {
                         completionHandlerForLogin(false, "Your information wasn't accessible.")
                     }
@@ -91,7 +91,7 @@ class OTMClient: NSObject {
 
         let task = session.dataTask(with: request) { data, response, error in
             guard (error == nil) else {
-                completionHandlerForLoggedIn(false, "There was an error downloading student data! \nError: \(error!)", nil, nil)
+                completionHandlerForLoggedIn(false, "Sorry: There was an error downloading your data.\nError:\(error?.localizedDescription ?? "Unexpected error")", nil, nil)
                 return
             }
             
@@ -120,7 +120,7 @@ class OTMClient: NSObject {
         task.resume()
     }
     
-    func taskForGet(_ completionHanlderForGet: @escaping(_ success: Bool, _ errorString: String?) -> Void) {
+    func taskForGetAllStudents(_ completionHanlderForGet: @escaping(_ success: Bool, _ errorString: String?) -> Void) {
         var request = URLRequest(url: URL(string: Constants.UdacityConstants.GetStudentData)!)
         request.httpMethod = "GET"
         request.addValue(Constants.UdacityConstants.UdacityApplicationID, forHTTPHeaderField: Constants.UdacityConstants.UdacityAppIDHeader)
@@ -128,7 +128,7 @@ class OTMClient: NSObject {
         
         let task = session.dataTask(with: request) { data, response, error in
             guard (error == nil) else {
-                completionHanlderForGet(false, "There was an error downloading student data! \nError: \(error!)")
+                completionHanlderForGet(false, "Sorry: There was an error downloading Udacity's data.\nError:\(error?.localizedDescription ?? "Unexpected error")")
                 return
             }
             
@@ -147,7 +147,7 @@ class OTMClient: NSObject {
                 return
             }
             
-            studentArray = Student.studentsFromRequest(studentDictionary)
+            StudentArray.shared.studentArray = Student.studentsFromRequest(studentDictionary)
             completionHanlderForGet(true, nil)
         }
         task.resume()
@@ -203,11 +203,11 @@ class OTMClient: NSObject {
         request.addValue(Constants.UdacityConstants.UdacityApplicationID, forHTTPHeaderField: Constants.UdacityConstants.UdacityAppIDHeader)
         request.addValue(Constants.UdacityConstants.UdacityAPIKey, forHTTPHeaderField: Constants.UdacityConstants.UdacityAPIKeyHeader)
         request.addValue(Constants.UdacityConstants.HeaderJSON, forHTTPHeaderField: Constants.UdacityConstants.HeaderContent)
-        request.httpBody = "{\"uniqueKey\": \"\(loggedInUser[Constants.LoggedInUser.uniqueKey]!)\", \"firstName\": \"\(loggedInUser[Constants.LoggedInUser.firstName]!)\", \"lastName\": \"\(loggedInUser[Constants.LoggedInUser.lastName]!)\",\"mapString\": \"\(loggedInUser[Constants.LoggedInUser.location]!)\", \"mediaURL\": \"\(loggedInUser[Constants.LoggedInUser.mediaURL]!)\",\"latitude\": \(loggedInUser[Constants.LoggedInUser.latitude]!), \"longitude\": \(loggedInUser[Constants.LoggedInUser.longitude]!)}".data(using: .utf8)
+        request.httpBody = "{\"uniqueKey\": \"\(UserArray.shared.loggedInUser[Constants.LoggedInUser.uniqueKey]!)\", \"firstName\": \"\(UserArray.shared.loggedInUser[Constants.LoggedInUser.firstName]!)\", \"lastName\": \"\(UserArray.shared.loggedInUser[Constants.LoggedInUser.lastName]!)\",\"mapString\": \"\(UserArray.shared.loggedInUser[Constants.LoggedInUser.location]!)\", \"mediaURL\": \"\(UserArray.shared.loggedInUser[Constants.LoggedInUser.mediaURL]!)\",\"latitude\": \(UserArray.shared.loggedInUser[Constants.LoggedInUser.latitude]!), \"longitude\": \(UserArray.shared.loggedInUser[Constants.LoggedInUser.longitude]!)}".data(using: .utf8)
         
         let task = session.dataTask(with: request) { data, response, error in
             guard (error == nil) else {
-                completionHanlderForPOST(false, "There was an error posting your information.")
+                completionHanlderForPOST(false, "There was an error posting your information.\nError:\(error?.localizedDescription ?? "Unexpected error")")
                 return
             }
             
@@ -231,8 +231,8 @@ class OTMClient: NSObject {
                 return
             }
             
-            loggedInUser[Constants.LoggedInUser.objectId] = objectId
-            loggedInUser[Constants.LoggedInUser.createdAt] = createdAt
+            UserArray.shared.loggedInUser[Constants.LoggedInUser.objectId] = objectId
+            UserArray.shared.loggedInUser[Constants.LoggedInUser.createdAt] = createdAt
             completionHanlderForPOST(true, nil)
         }
         task.resume()

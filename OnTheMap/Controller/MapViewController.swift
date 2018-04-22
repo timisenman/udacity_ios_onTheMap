@@ -30,7 +30,7 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBAction func logoutButtonAction(_ sender: Any) {
         OTMClient.sharedInstance().logoutAndDeleteSession { (success, errorString, sessionData) in
             if success {
-                logoutData = sessionData!
+                UserArray.shared.logoutData = sessionData!
             } else {
                 self.displayError(withString: errorString!)
             }
@@ -39,10 +39,10 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     }
     
     func downloadUserData() {
-        OTMClient.sharedInstance().taskForGet() { (success, errorString) in
+        OTMClient.sharedInstance().taskForGetAllStudents() { (success, errorString) in
             if success {
                 performUIUpdatesOnMain {
-                    self.setMapAnnotations(students: studentArray!)
+                    self.setMapAnnotations(students: StudentArray.shared.studentArray!)
                 }
             } else {
                 self.displayError(withString: errorString!)
@@ -61,9 +61,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             annotation.title = "\(student.firstName) \(student.lastName)"
             annotation.subtitle = student.mediaURL
             
-            studentAnnotations.append(annotation)
+            StudentArray.shared.studentAnnotations.append(annotation)
         }
-        self.mapView.addAnnotations(studentAnnotations)
+        self.mapView.addAnnotations(StudentArray.shared.studentAnnotations)
     }
     
     func configureMap() {
