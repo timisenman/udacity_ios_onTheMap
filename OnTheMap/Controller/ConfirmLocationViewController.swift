@@ -15,7 +15,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var mapView: MKMapView!
     @IBOutlet weak var confirmLocationButton: UIButton!
     
-    var annotations = [MKPointAnnotation]()
+//    var annotations = [MKPointAnnotation]()
     
     var newLocation: String?
     var newWebsite: String?
@@ -37,7 +37,7 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
     }
     
     @IBAction func confirmLocationAction(_ sender: Any) {
-        saveNewLocations()
+        saveUsersInformation()
         OTMClient.sharedInstance().postStudentLocation() { success, errorString in
             if success {
                 performUIUpdatesOnMain {
@@ -56,16 +56,24 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
         let coordinate = CLLocationCoordinate2D(latitude: lat, longitude: long)
         let annotation = MKPointAnnotation()
         annotation.coordinate = coordinate
+        annotation.title = "\(loggedInUser[Constants.LoggedInUser.firstName]!) \(loggedInUser[Constants.LoggedInUser.lastName]!)"
+        annotation.subtitle = "\(loggedInUser[Constants.LoggedInUser.mediaURL]!)"
         
-        self.annotations.append(annotation)
-        self.mapView.addAnnotations(annotations)
+        loggedInAnnotations.append(annotation)
+        self.mapView.addAnnotations(loggedInAnnotations)
     }
     
-    func saveNewLocations() {
+    func saveUsersInformation() {
         loggedInUser[Constants.LoggedInUser.latitude] = newLat
         loggedInUser[Constants.LoggedInUser.longitude] = newLong
         loggedInUser[Constants.LoggedInUser.mediaURL] = newWebsite
         loggedInUser[Constants.LoggedInUser.location] = newLocation
+    }
+    
+    func displayError(title: String, message: String) {
+        let alert = UIAlertController(title: "Oops!", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -77,17 +85,10 @@ class ConfirmLocationViewController: UIViewController, MKMapViewDelegate {
             pinView!.canShowCallout = true
             pinView!.pinTintColor = .red
             pinView!.rightCalloutAccessoryView = UIButton(type: .detailDisclosure)
-        } else {
+        }
+        else {
             pinView!.annotation = annotation
         }
-        
         return pinView
-    }
-    
-    func displayError(title: String, message: String) {
-        let alert = UIAlertController(title: "Oops!", message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Okay", style: .default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
-    }
-    
+    }    
 }

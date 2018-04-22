@@ -17,9 +17,6 @@ class MapViewController: UIViewController, MKMapViewDelegate {
     @IBOutlet weak var logoutButton: UIBarButtonItem!
     @IBOutlet weak var refreshDataButton: UIBarButtonItem!
     
-    
-    var annotations = [MKPointAnnotation]()
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         configureMap()
@@ -64,9 +61,9 @@ class MapViewController: UIViewController, MKMapViewDelegate {
             annotation.title = "\(student.firstName) \(student.lastName)"
             annotation.subtitle = student.mediaURL
             
-            self.annotations.append(annotation)
+            studentAnnotations.append(annotation)
         }
-        self.mapView.addAnnotations(annotations)
+        self.mapView.addAnnotations(studentAnnotations)
     }
     
     func configureMap() {
